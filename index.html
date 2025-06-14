@@ -1,0 +1,3861 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FC 24 Carreira Local</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Rubik&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Rubik', sans-serif;
+      background: #0E0E0E; /* Fundo principal */
+      color: #FFFFFF; /* Texto principal */
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Garante que o body ocupa a altura total da viewport */
+    }
+    header {
+      padding: 1.5rem 1rem;
+      background: #0E0E0E; /* Fundo da seção */
+      text-align: center;
+      font-size: 2.5rem; /* Retornado ao original */
+      color: #FFFFFF; /* Título principal */
+      font-family: 'Orbitron', sans-serif;
+      text-shadow: none;
+      border-bottom: 3px solid #32FF55; /* Neon Green border */
+      font-weight: bold;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem; /* Retornado ao original */
+      background: #0E0E0E; /* Fundo da seção */
+      padding: 1rem; /* Retornado ao original */
+      border-bottom: 1px solid rgba(255,255,255,0.1); /* Subtle white border */
+    }
+    nav button {
+      background-color: #1A1A1A; /* Darker grey for nav buttons */
+      border: none;
+      padding: 0.6rem 1.2rem; /* Retornado ao original */
+      color: rgba(255,255,255,0.8);
+      font-size: 1rem; /* Retornado ao original */
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
+      font-weight: bold;
+      display: flex; /* Para alinhar ícone e texto */
+      align-items: center;
+      gap: 0.5rem; /* Retornado ao original */
+    }
+    nav button i {
+        font-size: 1.2em; /* Retornado ao original */
+        color: #32FF55; /* Cor do ícone */
+    }
+    nav button:hover {
+      background-color: #333333; /* Lighter grey on hover */
+      color: #FFFFFF;
+    }
+    nav button.active {
+      background: linear-gradient(to right, transparent, #32FF55); /* Gradient */
+      color: #FFFFFF; /* White text for active tab */
+      border-color: #32FF55; /* Border for active tab */
+    }
+    nav button:disabled {
+      background-color: #1A1A1A; /* Darker grey when disabled */
+      color: rgba(255,255,255,0.4);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .content {
+      max-width: 1400px; /* Retornado ao original (mas ainda um bom tamanho) */
+      margin: auto;
+      padding: 2rem; /* Retornado ao original */
+      position: relative;
+      min-height: 500px; /* Retornado ao original */
+      flex-grow: 1;
+    }
+    section {
+      position: absolute;
+      width: calc(100% - 4rem); /* Retornado ao original */
+      top: 2rem; /* Retornado ao original */
+      left: 2rem; /* Retornado ao original */
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+      pointer-events: none;
+      box-sizing: border-box;
+      background: #0E0E0E; /* Fundo da seção */
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    section.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      z-index: 1;
+      position: relative;
+    }
+    h2 {
+      color: #FFFFFF;
+      font-size: 2.2rem; /* Retornado ao original */
+      border-bottom: 2px solid #32FF55;
+      padding-bottom: 0.3rem; /* Retornado ao original */
+      margin-bottom: 1rem; /* Retornado ao original */
+      font-weight: bold;
+    }
+    h3 {
+      color: #FFFFFF;
+      font-size: 1.8rem; /* Retornado ao original */
+      font-weight: bold;
+    }
+    h4 {
+      color: #FFFFFF;
+      font-size: 1.3rem; /* Retornado ao original */
+      font-weight: bold;
+    }
+    p {
+        color: rgba(255,255,255,0.8);
+        font-size: 1rem; /* Retornado ao original */
+        font-weight: normal;
+    }
+    .player-profile {
+      display: flex;
+      align-items: center;
+      background: #0E0E0E;
+      padding: 1.5rem; /* Retornado ao original */
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.1);
+      margin-bottom: 2rem; /* Retornado ao original */
+      box-shadow: 0 0 15px rgba(50, 255, 85, 0.2);
+      flex-wrap: wrap;
+    }
+    .player-profile img {
+      width: 120px; /* Retornado ao original */
+      height: 120px; /* Retornado ao original */
+      border-radius: 50%;
+      border: 4px solid #32FF55;
+      margin-right: 1.5rem; /* Retornado ao original */
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .profile-img-upload {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem; /* Retornado ao original */
+        margin-right: 1.5rem; /* Retornado ao original */
+        flex-shrink: 0;
+    }
+    .profile-img-upload input[type="file"] {
+        display: none;
+    }
+    .profile-img-upload label {
+        background-color: #32FF55;
+        color: #0E0E0E;
+        padding: 0.5rem 1rem; /* Retornado ao original */
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem; /* Retornado ao original */
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+    .profile-img-upload label:hover {
+        background-color: #66FF88;
+    }
+
+    .player-stats {
+      flex-grow: 1;
+    }
+    .player-stats h3 {
+      font-size: 2rem; /* Retornado ao original */
+    }
+    .player-stats p {
+      font-size: 1rem; /* Retornado ao original */
+      margin: 0.3rem 0; /* Retornado ao original */
+    }
+    .player-attributes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Retornado ao original */
+      gap: 1rem; /* Retornado ao original */
+      margin-top: 1rem; /* Retornado ao original */
+    }
+    .attribute-item {
+      padding: 0.8rem 1rem; /* Retornado ao original */
+      border-radius: 8px;
+    }
+    .attribute-item h4 {
+      font-size: 1.1rem; /* Retornado ao original */
+    }
+    .attribute-item p {
+      font-size: 0.9rem; /* Retornado ao original */
+    }
+    .club-selector {
+      gap: 1rem; /* Retornado ao original */
+    }
+    .club-card {
+      padding: 1rem; /* Retornado ao original */
+      width: 200px; /* Retornado ao original */
+    }
+    .club-card img {
+      width: 80px; /* Retornado ao original */
+      height: 80px; /* Retornado ao original */
+      margin-bottom: 0.5rem; /* Retornado ao original */
+    }
+    .club-details {
+      padding: 1.5rem; /* Retornado ao original */
+      margin-top: 1rem; /* Retornado ao original */
+    }
+    .club-details img {
+      width: 80px; /* Retornado ao original */
+      margin-right: 1rem; /* Retornado ao original */
+    }
+    .objective-item {
+      padding: 0.8rem 1rem; /* Retornado ao original */
+      margin-bottom: 0.5rem; /* Retornado ao original */
+    }
+    .objective-item input[type="checkbox"] {
+      margin-right: 0.8rem; /* Retornado ao original */
+      width: 20px; /* Retornado ao original */
+      height: 20px; /* Retornado ao original */
+    }
+    .objective-item label {
+      font-size: 1rem; /* Retornado ao original */
+    }
+    .modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.8); /* Retornado ao original */
+    }
+    .custom-modal {
+      padding: 2rem; /* Retornado ao original */
+      border-radius: 15px; /* Retornado ao original */
+      max-width: 400px; /* Retornado ao original */
+    }
+    .custom-modal h3 {
+      font-size: 1.5rem; /* Retornado ao original */
+    }
+    .custom-modal p {
+      font-size: 1rem; /* Retornado ao original */
+      margin-bottom: 1.5rem; /* Retornado ao original */
+    }
+    .custom-modal button {
+      padding: 0.8rem 1.5rem; /* Retornado ao original */
+      font-size: 1rem; /* Retornado ao original */
+    }
+
+    /* Progress Screen Styles */
+    .progress-bar-container {
+      margin-bottom: 1rem; /* Retornado ao original */
+    }
+    .progress-bar {
+      height: 25px; /* Retornado ao original */
+      line-height: 25px; /* Retornado ao original */
+      font-size: 1rem; /* Retornado ao original */
+    }
+    .progress-label {
+      font-size: 1rem; /* Retornado ao original */
+    }
+
+    /* Decision Screen Styles */
+    .decision-container {
+      padding: 1.5rem; /* Retornado ao original */
+      margin-top: 1rem; /* Retornado ao original */
+    }
+    .decision-container h3 {
+      font-size: 1.6rem; /* Retornado ao original */
+    }
+    .decision-container p {
+      font-size: 1rem; /* Retornado ao original */
+      margin-bottom: 1.5rem; /* Retornado ao original */
+    }
+    .decision-options button {
+      padding: 0.8rem 1.5rem; /* Retornado ao original */
+      font-size: 1rem; /* Retornado ao original */
+      margin-right: 1rem; /* Retornado ao original */
+      margin-bottom: 1rem; /* Retornado ao original */
+    }
+
+    /* Event log styles */
+    .event-log {
+      margin-top: 2rem; /* Retornado ao original */
+      padding: 1.5rem; /* Retornado ao original */
+    }
+    .event-log h3 {
+      font-size: 1.5rem; /* Retornado ao original */
+    }
+    .event-log ul {
+      max-height: 200px; /* Retornado ao original */
+      padding: 0.5rem; /* Retornado ao original */
+    }
+    .event-log li {
+      margin-bottom: 0.5rem; /* Retornado ao original */
+      font-size: 0.9rem; /* Retornado ao original */
+      padding-left: 10px; /* Retornado ao original */
+    }
+
+    /* Club Offers/Selection Screen: AUMENTADO APENAS AS CAIXAS E FONTES DENTRO */
+    .club-offers-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Mantido em 300px ou ajustado ligeiramente para caber */
+      gap: 1.5rem; /* Mantido em 1.5rem */
+      margin-top: 1.5rem;
+      justify-content: center;
+    }
+    .offer-card {
+      background: #0E0E0E;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 1.5rem; /* Aumentado um pouco para legibilidade interna */
+      text-align: center;
+      box-shadow: 0 0 15px rgba(50, 255, 85, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .offer-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 25px rgba(50, 255, 85, 0.6);
+    }
+    .offer-card img.club-logo {
+      width: 100px; /* Aumentado */
+      height: 100px; /* Aumentado */
+      border-radius: 50%;
+      border: 3px solid #32FF55;
+      margin-bottom: 1rem; /* Aumentado */
+      object-fit: contain;
+      background-color: #0E0E0E;
+      padding: 5px;
+    }
+    .offer-card h3 {
+      color: #FFFFFF;
+      font-size: 1.8rem; /* Aumentado */
+      margin-bottom: 0.5rem;
+    }
+    .offer-card p {
+      font-size: 1rem; /* Aumentado */
+      color: rgba(255,255,255,0.8);
+      margin: 0.3rem 0;
+    }
+    .offer-card .stars {
+      color: #32FF55;
+      font-size: 1.2rem; /* Aumentado */
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .offer-card button {
+      background-color: #32FF55;
+      color: #0E0E0E;
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+      width: 80%;
+    }
+    .offer-card button:hover {
+      background-color: #66FF88;
+      transform: translateY(-2px);
+    }
+
+    /* Attributes Section Styles */
+    .attributes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0E0E0E;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: 0 0 15px rgba(50, 255, 85, 0.2);
+      margin-bottom: 1.5rem;
+    }
+    .attributes-header h3 {
+      color: #FFFFFF;
+      margin: 0;
+      font-size: 1.8rem; /* Retornado ao original */
+    }
+    .attributes-header .info-text {
+      color: #32FF55;
+      font-size: 1.1rem; /* Retornado ao original */
+      font-weight: bold;
+    }
+
+    .attributes-container {
+      display: flex;
+      gap: 1.5rem; /* Retornado ao original */
+      min-height: 400px; /* Retornado ao original */
+      flex-wrap: wrap;
+    }
+    .attributes-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem; /* Retornado ao original */
+      width: 200px; /* Retornado ao original */
+      flex-shrink: 0;
+    }
+    .attributes-categories button {
+      background: #0E0E0E;
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.8rem 1rem; /* Retornado ao original */
+      text-align: left;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem; /* Retornado ao original */
+      transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .attributes-categories button.active {
+      background-color: #32FF55;
+      color: #0E0E0E;
+      border-color: #FFFFFF;
+      font-weight: bold;
+    }
+    .attributes-categories button:hover:not(.active) {
+      background-color: #1a1a1a;
+      border-color: #32FF55;
+    }
+
+    .skill-tree-display {
+      flex-grow: 1;
+      background: #0E0E0E;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 1.5rem; /* Retornado ao original */
+      position: relative;
+      min-height: 350px; /* Retornado ao original */
+    }
+    .skill-tree-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1rem; /* Retornado ao original */
+        align-items: start;
+        justify-items: center;
+        position: relative;
+        padding: 1rem; /* Retornado ao original */
+    }
+    .skill-node-item {
+        background: #0E0E0E;
+        border: 2px solid rgba(255,255,255,0.1);
+        border-radius: 8px;
+        padding: 0.5rem; /* Retornado ao original */
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s, border-color 0.2s;
+        position: relative;
+        width: 80px; /* Retornado ao original */
+        height: 80px; /* Retornado ao original */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem; /* Retornado ao original */
+        overflow: hidden;
+    }
+    .skill-node-item.locked {
+        opacity: 0.5;
+        border-color: rgba(255,255,255,0.05);
+        cursor: not-allowed;
+    }
+    .skill-node-item.unlocked {
+        background-color: #1A1A1A;
+        border-color: #32FF55;
+    }
+    .skill-node-item.selected {
+        border-color: #FFFFFF;
+        box-shadow: 0 0 15px rgba(50, 255, 85, 0.5);
+    }
+    .skill-node-item:hover:not(.locked) {
+        transform: scale(1.05);
+        border-color: #32FF55;
+    }
+    .skill-node-item i {
+      font-size: 2.2rem; /* Retornado ao original */
+      color: #32FF55;
+      margin-bottom: 0.2rem;
+    }
+    .skill-node-item.locked i {
+      color: rgba(255,255,255,0.4);
+    }
+    .skill-node-item span {
+      display: block;
+      line-height: 1.1;
+      font-weight: bold;
+      color: #FFFFFF;
+    }
+
+    .skill-tree-lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .skill-tree-line {
+      position: absolute;
+      background-color: rgba(255,255,255,0.1);
+      height: 2px;
+      transform-origin: 0 0;
+      z-index: 0;
+    }
+
+    .skill-details-panel {
+      width: 300px; /* Retornado ao original */
+      flex-shrink: 0;
+      background: #0E0E0E;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 1.5rem; /* Retornado ao original */
+      box-shadow: 0 0 15px rgba(50, 255, 85, 0.2);
+    }
+    .skill-details-panel h3 {
+      font-size: 1.6rem; /* Retornado ao original */
+    }
+    .skill-details-panel p {
+      font-size: 0.95rem; /* Retornado ao original */
+    }
+    .skill-details-panel .cost {
+      font-size: 1rem; /* Retornado ao original */
+    }
+    .skill-details-panel .attribute-change {
+        font-size: 0.9rem; /* Retornado ao original */
+    }
+    .skill-details-panel button {
+      padding: 0.8rem 1.5rem; /* Retornado ao original */
+      font-size: 1rem; /* Retornado ao original */
+      margin-top: 1rem; /* Retornado ao original */
+    }
+
+    /* PLAYSTYLES SECTION STYLES */
+    .playstyles-container {
+      display: flex;
+      gap: 1.5rem; /* Retornado ao original */
+      min-height: 400px; /* Retornado ao original */
+      flex-wrap: wrap;
+    }
+
+    .playstyles-categories {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem; /* Retornado ao original */
+        width: 200px; /* Retornado ao original */
+        flex-shrink: 0;
+    }
+    .playstyles-categories button {
+        background: #0E0E0E;
+        color: rgba(255,255,255,0.8);
+        border: 1px solid rgba(255,255,255,0.1);
+        padding: 0.8rem 1rem; /* Retornado ao original */
+        text-align: left;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem; /* Retornado ao original */
+        transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .playstyles-categories button.active {
+        background-color: #32FF55;
+        color: #0E0E0E;
+        border-color: #FFFFFF;
+        font-weight: bold;
+    }
+    .playstyles-categories button:hover:not(.active) {
+        background-color: #1A1A1A;
+        border-color: #32FF55;
+    }
+
+    .playstyles-grid-display {
+        flex-grow: 1;
+        background: #0E0E0E;
+        border: 2px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 1.5rem; /* Retornado ao original */
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Retornado ao original */
+        gap: 1rem; /* Retornado ao original */
+        align-content: start;
+        overflow-y: auto;
+        max-height: 400px; /* Retornado ao original */
+    }
+
+    .playstyle-card {
+        background: #0E0E0E;
+        border: 2px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 0.8rem; /* Retornado ao original */
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s, border-color 0.2s, background-color 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .playstyle-card:hover {
+        transform: translateY(-3px);
+        border-color: #32FF55;
+    }
+    .playstyle-card.equipped {
+        background-color: #1A1A1A;
+        border-color: #32FF55;
+        box-shadow: 0 0 10px rgba(50, 255, 85, 0.4);
+    }
+    .playstyle-card.selected {
+        border-color: #FFFFFF;
+        box-shadow: 0 0 15px rgba(50, 255, 85, 0.5);
+    }
+    .playstyle-card.locked {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .playstyle-card i {
+        font-size: 3rem; /* Retornado ao original */
+        color: #32FF55;
+        margin-bottom: 0.5rem;
+    }
+    .playstyle-card.locked i {
+      color: rgba(255,255,255,0.4);
+    }
+    .playstyle-card span {
+        font-size: 0.8rem; /* Retornado ao original */
+        font-weight: bold;
+        color: #FFFFFF;
+        line-height: 1.1;
+    }
+    .playstyle-card.equipped span {
+      color: #32FF55;
+    }
+
+    .playstyle-details-panel {
+        width: 300px; /* Retornado ao original */
+        flex-shrink: 0;
+        background: #0E0E0E;
+        border: 2px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 1.5rem; /* Retornado ao original */
+        box-shadow: 0 0 15px rgba(50, 255, 85, 0.2);
+    }
+    .playstyle-details-panel h3 {
+        font-size: 1.6rem; /* Retornado ao original */
+    }
+    .playstyle-details-panel p {
+        font-size: 0.95rem; /* Retornado ao original */
+    }
+    .playstyle-details-panel .cost {
+        font-size: 1rem; /* Retornado ao original */
+    }
+    .playstyle-details-panel .attribute-change {
+        font-size: 0.9rem; /* Retornado ao original */
+    }
+    .playstyle-details-panel button {
+        padding: 0.8rem 1.5rem; /* Retornado ao original */
+        font-size: 1rem; /* Retornado ao original */
+        margin-top: 1rem; /* Retornado ao original */
+    }
+    .playstyle-details-panel button:disabled {
+        background-color: #1A1A1A;
+        color: rgba(255,255,255,0.4);
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    /* CELULAR APP STYLES - iPhone 16 redesign: AUMENTADO APENAS AS CAIXAS E FONTES DENTRO */
+    .cellular-app-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 700px; /* Retornado ao original */
+      width: 100%;
+      padding: 20px 0; /* Retornado ao original */
+    }
+
+    .iphone-frame {
+      width: 500px; /* Retornado ao original */
+      height: 900px; /* Retornado ao original */
+      background-color: #111;
+      border: 15px solid #222; /* Retornado ao original */
+      border-radius: 40px; /* Retornado ao original */
+      box-shadow: 0 0 20px rgba(50, 255, 85, 0.5), inset 0 0 10px rgba(0,0,0,0.8);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px; /* Retornado ao original */
+      box-sizing: border-box;
+    }
+
+    .iphone-dynamic-island {
+        width: 120px; /* Retornado ao original */
+        height: 30px; /* Retornado ao original */
+        background-color: #000;
+        border-radius: 15px;
+        position: absolute;
+        top: 20px;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #FFF;
+        font-size: 0.8rem; /* Retornado ao original */
+        padding: 0 10px;
+        box-sizing: border-box;
+        transition: width 0.3s ease, height 0.3s ease;
+    }
+    .iphone-dynamic-island.expanded {
+        width: 80%;
+        height: 60px;
+        border-radius: 30px;
+        padding: 0 20px;
+    }
+
+    .iphone-screen {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      border-radius: 25px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cellular-app-nav {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.5rem; /* Retornado ao original */
+        background: rgba(0,0,0,0.8);
+        padding: 0.8rem; /* Retornado ao original */
+        border-radius: 0;
+        margin-bottom: 0;
+        border: none;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .cellular-app-nav button {
+        background-color: #1A1A1A;
+        border: none;
+        padding: 0.5rem 1rem; /* Retornado ao original */
+        color: rgba(255,255,255,0.8);
+        font-size: 0.9rem; /* Retornado ao original */
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background 0.3s, transform 0.2s;
+        font-weight: bold;
+    }
+    .cellular-app-nav button.active {
+        background-color: #32FF55;
+        color: #0E0E0E;
+        font-weight: bold;
+    }
+    .cellular-app-nav button:hover:not(.active) {
+        background-color: #333333;
+        transform: translateY(-1px);
+    }
+
+    .cellular-app-content {
+        flex-grow: 1;
+        position: relative;
+        padding: 1.5rem; /* Retornado ao original */
+        background: #0E0E0E;
+        border: none;
+        border-radius: 0;
+        min-height: auto;
+        overflow-y: auto;
+    }
+
+    .cellular-app-panel {
+        position: absolute;
+        width: calc(100% - 3rem); /* Retornado ao original */
+        height: calc(100% - 3rem); /* Retornado ao original */
+        top: 1.5rem; /* Retornado ao original */
+        left: 1.5rem; /* Retornado ao original */
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        pointer-events: none;
+        box-sizing: border-box;
+        display: none;
+        overflow-y: auto;
+    }
+    .cellular-app-panel.active {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+        display: block;
+    }
+
+    /* Specific App Styles */
+    #conversas-app .contact-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem; /* Retornado ao original */
+        margin-bottom: 1rem;
+    }
+    #conversas-app .contact-item {
+        background-color: #1A1A1A;
+        padding: 0.8rem; /* Retornado ao original */
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.1);
+        cursor: pointer;
+        transition: background-color 0.2s;
+        color: rgba(255,255,255,0.8);
+        font-size: 1rem; /* AUMENTADO para legibilidade */
+    }
+    #conversas-app .contact-item:hover {
+        background-color: #333333;
+    }
+    #conversas-app .chat-window {
+        background-color: #1A1A1A;
+        border-radius: 8px;
+        padding: 1rem; /* Retornado ao original */
+        height: 550px; /* Retornado ao original */
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem; /* Retornado ao original */
+        margin-bottom: 1rem;
+    }
+    #conversas-app .message {
+        background-color: rgba(50, 255, 85, 0.2);
+        padding: 0.6rem 1rem; /* Retornado ao original */
+        border-radius: 12px;
+        max-width: 80%;
+        color: #FFFFFF;
+        font-size: 0.95rem; /* AUMENTADO para legibilidade */
+    }
+    #conversas-app .message.sent {
+        align-self: flex-end;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    #conversas-app .message.received {
+        align-self: flex-start;
+    }
+    #conversas-app .chat-input {
+        display: flex;
+        gap: 0.5rem; /* Retornado ao original */
+    }
+    #conversas-app .chat-input input {
+        flex-grow: 1;
+        padding: 0.8rem; /* Retornado ao original */
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.1);
+        background-color: #0E0E0E;
+        color: #FFFFFF;
+        font-size: 1rem; /* AUMENTADO para legibilidade */
+    }
+    #conversas-app .chat-input button {
+        background-color: #32FF55;
+        color: #0E0E0E;
+        border: none;
+        padding: 0.8rem 1.2rem; /* Retornado ao original */
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 0.95rem; /* AUMENTADO para legibilidade */
+    }
+
+    #email-app .email-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem; /* Retornado ao original */
+        margin-bottom: 1rem;
+    }
+    #email-app .email-item {
+        background-color: #1A1A1A;
+        padding: 0.8rem; /* Retornado ao original */
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.1);
+        cursor: pointer;
+        transition: background-color 0.2s;
+        color: rgba(255,255,255,0.8);
+        font-size: 1rem; /* AUMENTADO para legibilidade */
+    }
+    #email-app .email-item:hover {
+        background-color: #333333;
+    }
+    #email-app .email-content {
+        background-color: #1A1A1A;
+        border-radius: 8px;
+        padding: 1rem; /* Retornado ao original */
+        height: 600px; /* Retornado ao original */
+        overflow-y: auto;
+        color: rgba(255,255,255,0.8);
+        font-size: 1rem; /* AUMENTADO para legibilidade */
+    }
+    #email-app .email-content h4 {
+        color: #FFFFFF;
+        font-size: 1.1rem; /* AUMENTADO para legibilidade */
+    }
+
+    #google-app .search-bar {
+        display: flex;
+        gap: 0.5rem; /* Retornado ao original */
+        margin-bottom: 1rem;
+    }
+    #google-app .search-bar input {
+        flex-grow: 1;
+        padding: 0.8rem; /* Retornado ao original */
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.1);
+        background-color: #0E0E0E;
+        color: #FFFFFF;
+        font-size: 1rem; /* AUMENTADO para legibilidade */
+    }
+    #google-app .search-bar button {
+        background-color: #32FF55;
+        color: #0E0E0E;
+        border: none;
+        padding: 0.8rem 1.2rem; /* Retornado ao original */
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 0.95rem; /* AUMENTADO para legibilidade */
+    }
+    #google-app .search-results {
+        background-color: #1A1A1A;
+        border-radius: 8px;
+        padding: 1rem; /* Retornado ao original */
+        height: 600px; /* Retornado ao original */
+        overflow-y: auto;
+        color: rgba(255,255,255,0.8);
+        font-size: 1rem; /* AUMENTADO para legibilidade */
+    }
+    #google-app .search-results a {
+        color: #32FF55;
+    }
+    #google-app .search-results small {
+        color: rgba(255,255,255,0.6);
+        font-size: 0.9rem; /* AUMENTADO para legibilidade */
+    }
+
+    /* Styles for general websites (Dynasty 8, Legendary Motorsport, Pedal & Metal) */
+    .website-content {
+      background-color: #1A1A1A;
+      border-radius: 8px;
+      padding: 1rem; /* Retornado ao original */
+      min-height: 300px;
+      height: 600px; /* Retornado ao original */
+      overflow-y: auto;
+      color: rgba(255,255,255,0.8);
+      font-size: 1rem; /* AUMENTADO para legibilidade */
+    }
+    .website-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .website-content .property-card, .website-content .vehicle-card, .website-content .bike-card {
+        background-color: #0E0E0E;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 1rem; /* AUMENTADO para legibilidade interna */
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .website-content .property-card h4, .website-content .vehicle-card h4, .website-content .bike-card h4 {
+        color: #FFFFFF;
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem; /* AUMENTADO para legibilidade */
+    }
+    .website-content .property-card p, .website-content .vehicle-card p, .website-content .bike-card p {
+        font-size: 0.95rem; /* AUMENTADO para legibilidade */
+        color: rgba(255,255,255,0.7);
+        margin-bottom: 0.5rem;
+    }
+    .website-content .purchase-button {
+      background-color: #32FF55;
+      color: #0E0E0E;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 0.8rem;
+      font-size: 0.9rem; /* AUMENTADO para legibilidade */
+    }
+
+    /* Instagram styles */
+    #instagram-app .instagram-profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    #instagram-app .instagram-profile img {
+      width: 100px; /* Retornado ao original */
+      height: 100px; /* Retornado ao original */
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #32FF55;
+      margin-bottom: 0.5rem;
+    }
+    #instagram-app .instagram-profile h4 {
+      color: #FFFFFF;
+      margin: 0.5rem 0;
+      font-size: 1.4rem; /* AUMENTADO para legibilidade */
+    }
+    #instagram-app .instagram-posts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Retornado ao original */
+      gap: 1rem; /* Retornado ao original */
+      max-height: 550px; /* Retornado ao original */
+      overflow-y: auto;
+    }
+    #instagram-app .instagram-post {
+      background-color: #0E0E0E;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    #instagram-app .instagram-post img {
+      width: 100%;
+      height: 150px; /* Retornado ao original */
+      object-fit: cover;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    #instagram-app .instagram-post p {
+      padding: 0.5rem;
+      font-size: 0.95rem; /* AUMENTADO para legibilidade */
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* X (Twitter) styles */
+    #x-app .tweet-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem; /* Retornado ao original */
+      max-height: 550px; /* Retornado ao original */
+      overflow-y: auto;
+    }
+    #x-app .tweet {
+      background-color: #0E0E0E;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem;
+    }
+    #x-app .tweet .author {
+      font-weight: bold;
+      color: #32FF55;
+      margin-bottom: 0.3rem;
+      font-size: 1.05rem; /* AUMENTADO para legibilidade */
+    }
+    #x-app .tweet .content {
+      font-size: 1rem; /* AUMENTADO para legibilidade */
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* Character Creation Form Styles */
+    .character-creation-form {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem; /* Retornado ao original */
+        padding: 1rem; /* Retornado ao original */
+    }
+    .character-creation-form label {
+        color: #FFFFFF;
+        font-size: 1.1rem; /* Retornado ao original */
+        margin-bottom: 0.3rem;
+        display: block;
+        font-weight: bold;
+    }
+    .character-creation-form input[type="text"],
+    .character-creation-form input[type="number"],
+    .character-creation-form select {
+        width: calc(100% - 22px);
+        padding: 0.8rem; /* Retornado ao original */
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.3);
+        background-color: #1A1A1A;
+        color: #FFFFFF;
+        font-size: 1rem; /* Retornado ao original */
+        box-sizing: border-box;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .character-creation-form input[type="text"]:focus,
+    .character-creation-form input[type="number"]:focus,
+    .character-creation-form select:focus {
+        border-color: #32FF55;
+        box-shadow: 0 0 8px rgba(50, 255, 85, 0.5);
+        outline: none;
+    }
+    .character-creation-form select option {
+        background-color: #0E0E0E;
+        color: #FFFFFF;
+    }
+    .character-creation-form button {
+        background-color: #32FF55;
+        color: #0E0E0E;
+        border: none;
+        padding: 1rem 2rem; /* Retornado ao original */
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem; /* Retornado ao original */
+        font-weight: bold;
+        transition: background-color 0.3s, transform 0.2s;
+        margin-top: 1.5rem; /* Retornado ao original */
+        width: 100%;
+    }
+    .character-creation-form button:hover {
+        background-color: #66FF88;
+        transform: translateY(-2px);
+    }
+    @media (min-width: 768px) {
+        .character-creation-form {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    /* Sub-navigation for Player section */
+    .player-sub-nav {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.5rem; /* Retornado ao original */
+        background: #0E0E0E;
+        padding: 0.8rem; /* Retornado ao original */
+        border-radius: 8px;
+        margin-bottom: 1.5rem; /* Retornado ao original */
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .player-sub-nav button {
+        background-color: #1A1A1A;
+        border: none;
+        padding: 0.5rem 1rem; /* Retornado ao original */
+        color: rgba(255,255,255,0.8);
+        font-size: 0.9rem; /* Retornado ao original */
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background 0.3s, transform 0.2s;
+        font-weight: bold;
+    }
+    .player-sub-nav button.active {
+        background-color: #32FF55;
+        color: #0E0E0E;
+    }
+    .player-sub-nav button:hover:not(.active) {
+        background-color: #333333;
+        transform: translateY(-1px);
+    }
+
+    /* Player sub-panels */
+    .player-sub-panel {
+        position: absolute;
+        width: calc(100% - 3rem); /* Retornado ao original */
+        height: calc(100% - 3rem); /* Retornado ao original */
+        top: 1.5rem; /* Retornado ao original */
+        left: 1.5rem; /* Retornado ao original */
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        pointer-events: none;
+        box-sizing: border-box;
+        display: none;
+        overflow-y: auto;
+    }
+    .player-sub-panel.active {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+        display: block;
+    }
+
+    /* Social Circle specific styles */
+    .social-category {
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 1.5rem; /* Retornado ao original */
+        background-color: #1A1A1A;
+    }
+    .social-category h4 {
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+        font-size: 1.6rem; /* AUMENTADO para legibilidade */
+    }
+    .social-input-group {
+        display: flex;
+        gap: 0.5rem; /* Retornado ao original */
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+    .social-input-group input[type="text"],
+    .social-input-group select {
+        flex-grow: 1;
+        padding: 0.6rem; /* Retornado ao original */
+        border-radius: 5px;
+        border: 1px solid rgba(255,255,255,0.2);
+        background-color: #0E0E0E;
+        color: #FFFFFF;
+        font-size: 0.95rem; /* AUMENTADO para legibilidade */
+    }
+    .social-input-group button {
+        background-color: #32FF55;
+        color: #0E0E0E;
+        border: none;
+        padding: 0.6rem 1rem; /* Retornado ao original */
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 0.9rem; /* AUMENTADO para legibilidade */
+    }
+    .social-list {
+        list-style: none;
+        padding: 0;
+    }
+    .social-list li {
+        background-color: #0E0E0E;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 8px;
+        padding: 0.8rem; /* Retornado ao original */
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1rem; /* AUMENTADO para legibilidade */
+    }
+    .social-list li button {
+        background-color: #FF3232;
+        color: #FFFFFF;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.8rem; /* Retornado ao original */
+    }
+
+    /* Calendar styles */
+    .calendar-container {
+        background: #0E0E0E;
+        padding: 1.5rem; /* Retornado ao original */
+        border-radius: 10px;
+        border: 2px solid rgba(255,255,255,0.1);
+        box-shadow: 0 0 15px rgba(50, 255, 85, 0.2);
+        margin-top: 1rem;
+    }
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px; /* Retornado ao original */
+        text-align: center;
+    }
+    .calendar-grid div {
+        padding: 8px; /* Retornado ao original */
+        border-radius: 5px;
+        background-color: #1A1A1A;
+        color: rgba(255,255,255,0.8);
+        font-size: 0.95rem; /* AUMENTADO para legibilidade */
+    }
+    .calendar-grid .day-name {
+        font-weight: bold;
+        color: #32FF55;
+    }
+    .calendar-grid .current-day {
+        background-color: #32FF55;
+        color: #0E0E0E;
+        font-weight: bold;
+    }
+    .calendar-grid .game-day {
+        border: 2px solid #FFD700;
+        box-shadow: 0 0 8px rgba(255,215,0,0.5);
+    }
+    .calendar-navigation button {
+        background-color: #32FF55;
+        color: #0E0E0E;
+        border: none;
+        padding: 0.6rem 1.2rem; /* Retornado ao original */
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 1rem;
+        margin-right: 0.5rem;
+        font-size: 0.95rem; /* AUMENTADO para legibilidade */
+    }
+    .add-event-form {
+      margin-top: 2rem;
+      padding: 1.5rem; /* Retornado ao original */
+      background-color: #1A1A1A;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem; /* Retornado ao original */
+    }
+    .add-event-form div {
+      display: flex;
+      flex-direction: column;
+    }
+    .add-event-form label {
+      margin-bottom: 0.3rem;
+      color: #FFFFFF;
+      font-weight: bold;
+      font-size: 1rem; /* AUMENTADO para legibilidade */
+    }
+    .add-event-form input[type="date"],
+    .add-event-form input[type="text"],
+    .add-event-form select {
+      padding: 0.6rem; /* Retornado ao original */
+      border-radius: 5px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background-color: #0E0E0E;
+      color: #FFFFFF;
+      font-size: 0.9rem; /* Retornado ao original */
+    }
+    .add-event-form button {
+      grid-column: 1 / -1;
+      background-color: #32FF55;
+      color: #0E0E0E;
+      border: none;
+      padding: 0.8rem 1.5rem; /* Retornado ao original */
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+      font-size: 1rem; /* AUMENTADO para legibilidade */
+    }
+
+    /* Press Conference styles */
+    .press-conference-container {
+      background: #0E0E0E;
+      padding: 1.5rem; /* Retornado ao original */
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: 0 0 15px rgba(50, 255, 85, 0.2);
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .press-conference-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        border: 2px solid #32FF55;
+        box-shadow: 0 0 10px rgba(50, 255, 85, 0.5);
+    }
+    .cinematic-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9); /* Retornado ao original */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1100;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      pointer-events: none;
+      flex-direction: column;
+    }
+    .cinematic-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .cinematic-content {
+      background: #1A1A1A;
+      padding: 2.5rem; /* Retornado ao original */
+      border-radius: 15px; /* Retornado ao original */
+      border: 3px solid #32FF55;
+      box-shadow: 0 0 25px rgba(50, 255, 85, 0.8);
+      max-width: 700px; /* Retornado ao original */
+      width: 90%;
+      text-align: left;
+      transform: translateY(20px);
+      transition: transform 0.5s ease-in-out;
+    }
+    .cinematic-overlay.active .cinematic-content {
+      transform: translateY(0);
+    }
+    .journalist-speech {
+      font-style: italic;
+      color: #32FF55;
+      margin-bottom: 1rem;
+      font-size: 1.2rem; /* Retornado ao original */
+      line-height: 1.5;
+    }
+    .journalist-info {
+      font-size: 0.9rem; /* Retornado ao original */
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 1.5rem;
+    }
+    .player-response-input {
+      width: calc(100% - 2rem);
+      padding: 1rem; /* Retornado ao original */
+      margin-top: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background-color: #0E0E0E;
+      color: #FFFFFF;
+      font-size: 1rem; /* Retornado ao original */
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 80px; /* Retornado ao original */
+    }
+    .press-button {
+      background-color: #32FF55;
+      color: #0E0E0E;
+      border: none;
+      padding: 0.8rem 1.5rem; /* Retornado ao original */
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem; /* Retornado ao original */
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+      margin-top: 1rem;
+    }
+    .press-button:hover {
+      background-color: #66FF88;
+      transform: translateY(-2px);
+    }
+    .press-conference-feedback {
+      margin-top: 1.5rem;
+      padding: 1rem; /* Retornado ao original */
+      background-color: #0E0E0E;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+      font-style: italic;
+      font-size: 0.95rem; /* AUMENTADO para legibilidade */
+    }
+
+  
+/* ESTILO AUMENTADO DAS CAIXAS INTERNAS */
+.character-creation-form > div,
+.social-category,
+.attribute-item,
+.skill-details-panel,
+.playstyle-details-panel,
+.custom-modal,
+.decision-container,
+.event-log,
+.player-profile,
+.club-card,
+.club-details,
+.objective-item,
+.skill-node-item,
+.playstyle-card,
+.cellular-app-panel {
+  padding: 2rem !important;
+  font-size: 1.05rem;
+}
+
+.player-sub-panel,
+.cellular-app-panel,
+.skill-tree-display,
+.playstyles-grid-display {
+  min-height: 600px !important;
+}
+
+.character-creation-form button,
+button,
+.offer-card button,
+.cellular-app-nav button {
+  padding: 1rem 2rem !important;
+  font-size: 1.1rem !important;
+}
+
+.character-creation-form input[type="text"],
+.character-creation-form input[type="number"],
+.character-creation-form select,
+textarea {
+  padding: 1rem !important;
+  font-size: 1.05rem !important;
+}
+
+.attribute-item,
+.playstyle-card {
+  min-width: 180px;
+  min-height: 120px;
+}
+
+.contact-item,
+.email-item {
+  padding: 1.2rem !important;
+  font-size: 1.1rem !important;
+}
+
+.message {
+  padding: 1rem 1.5rem !important;
+  font-size: 1.05rem !important;
+}
+
+</style>
+</head>
+<body>
+  <header>FC 24 Carreira</header>
+  <nav>
+    <button onclick="switchTab('criacao')" id="criacao-tab-button"><i class="ph ph-user-plus"></i> Criação</button>
+    <button onclick="switchTab('jogador')" id="jogador-tab-button" disabled><i class="ph ph-user"></i> Jogador</button>
+    <button onclick="switchTab('decisoes')" id="decisoes-tab-button" disabled><i class="ph ph-handshake"></i> Decisões</button>
+    <button onclick="switchTab('atributos')" id="atributos-tab-button" disabled><i class="ph ph-chart-bar"></i> Atributos</button>
+    <button onclick="switchTab('progresso')" id="progresso-tab-button" disabled><i class="ph ph-chart-line"></i> Progresso</button>
+    <button onclick="switchTab('edicao')" id="edicao-tab-button" disabled><i class="ph ph-pencil-line"></i> Edição</button>
+    <button onclick="switchTab('celular')" id="celular-tab-button" disabled><i class="ph ph-phone"></i> Celular</button>
+    <button onclick="switchTab('calendario')" id="calendario-tab-button" disabled><i class="ph ph-calendar"></i> Calendário</button>
+    <button onclick="switchTab('imprensa')" id="imprensa-tab-button" disabled><i class="ph ph-microphone-stage"></i> Imprensa</button>
+  </nav>
+  <div class="content">
+    <!-- Character Creation Section -->
+    <section id="criacao" class="active">
+      <h2>Criação de Personagem</h2>
+      <div class="character-creation-form">
+        <div>
+          <label for="player-name-input">Nome:</label>
+          <input type="text" id="player-name-input" placeholder="Seu nome no jogo" required>
+        </div>
+        <div>
+          <label for="player-nationality-input">Nacionalidade:</label>
+          <input type="text" id="player-nationality-input" placeholder="Ex: Brasileira" required>
+        </div>
+        <div>
+          <label for="player-age-input">Idade:</label>
+          <input type="number" id="player-age-input" min="16" max="40" value="18" required>
+        </div>
+        <div>
+          <label for="player-height-input">Altura (cm):</label>
+          <input type="number" id="player-height-input" min="150" max="210" value="180" required>
+        </div>
+        <div>
+          <label for="player-weight-input">Peso (kg):</label>
+          <input type="number" id="player-weight-input" min="50" max="100" value="75" required>
+        </div>
+        <div>
+          <label for="player-position-select">Posição preferida em campo:</label>
+          <select id="player-position-select" required>
+            <option value="">Selecione</option>
+            <option value="Goleiro">Goleiro (GOL)</option>
+            <option value="Zagueiro">Zagueiro (ZAG)</option>
+            <option value="Lateral Direito">Lateral Direito (LD)</option>
+            <option value="Lateral Esquerdo">Lateral Esquerdo (LE)</option>
+            <option value="Volante">Volante (VOL)</option>
+            <option value="Meia Central">Meia Central (MC)</option>
+            <option value="Meia Atacante">Meia Atacante (MEI)</option>
+            <option value="Ponta Esquerda">Ponta Esquerda (PE)</option>
+            <option value="Ponta Direita">Ponta Direita (PD)</option>
+            <option value="Centroavante">Centroavante (ATA)</option>
+          </select>
+        </div>
+        <div>
+          <label for="player-foot-select">Pé bom:</label>
+          <select id="player-foot-select" required>
+            <option value="">Selecione</option>
+            <option value="Destro">Destro</option>
+            <option value="Canhoto">Canhoto</option>
+          </select>
+        </div>
+        <div>
+          <label for="player-playstyle-select">Estilo de jogo preferido:</label>
+          <select id="player-playstyle-select" required>
+            <option value="">Selecione</option>
+            <option value="Agressivo">Agressivo</option>
+            <option value="Técnico">Técnico</option>
+            <option value="Veloz">Veloz</option>
+            <option value="Defensivo">Defensivo</option>
+            <option value="Criativo">Criativo</option>
+            <option value="Líder">Líder</option>
+          </select>
+        </div>
+        <div>
+          <label for="player-skin-color-input">Cor da pele:</label>
+          <input type="text" id="player-skin-color-input" placeholder="Ex: Média, Escura" required>
+        </div>
+        <div>
+          <label for="player-hair-color-input">Cor do cabelo:</label>
+          <input type="text" id="player-hair-color-input" placeholder="Ex: Preto, Castanho" required>
+        </div>
+        <div>
+          <label for="player-hair-style-input">Estilo de cabelo:</label>
+          <input type="text" id="player-hair-style-input" placeholder="Ex: Curto, Moicano" required>
+        </div>
+        <div>
+          <label for="player-boot-color-input">Cor da chuteira:</label>
+          <input type="text" id="player-boot-color-input" placeholder="Ex: Verde Neon, Preta" required>
+        </div>
+        <div>
+          <label for="player-jersey-number-input">Número preferido:</label>
+          <input type="number" id="player-jersey-number-input" min="1" max="99" value="10" required>
+        </div>
+        <div style="grid-column: 1 / -1;">
+          <label for="player-favorite-team-input">Time do coração:</label>
+          <input type="text" id="player-favorite-team-input" placeholder="Ex: Flamengo, Real Madrid" required>
+        </div>
+        <button onclick="createCharacter()">Criar Personagem</button>
+      </div>
+    </section>
+
+    <!-- Player Profile Section -->
+    <section id="jogador">
+      <h2>Seu Jogador</h2>
+      <div class="player-sub-nav">
+        <button onclick="switchPlayerSubTab('perfil')" id="perfil-subtab-button" class="active">Perfil</button>
+        <button onclick="switchPlayerSubTab('circulo-social')" id="social-subtab-button">Círculo Social</button>
+      </div>
+
+      <!-- Player Profile Sub-Panel -->
+      <div id="perfil-sub-panel" class="player-sub-panel active">
+        <div class="player-profile">
+            <div class="profile-img-upload">
+                <img id="player-portrait" src="images/AVATAR.png" alt="Retrato do Jogador" onerror="this.onerror=null;this.src='https://placehold.co/120x120/0E0E0E/32FF55?text=AVATAR';">
+                <label for="profile-picture-input">Alterar Foto</label>
+                <input type="file" id="profile-picture-input" accept="image/*" onchange="handleProfilePictureUpload()">
+            </div>
+            <div class="player-stats">
+            <h3 id="player-name"></h3>
+            <p>Idade: <span id="player-age"></span></p>
+            <p>Nacionalidade: <span id="player-nationality"></span></p>
+            <p>Altura: <span id="player-height"></span> cm</p>
+            <p>Peso: <span id="player-weight"></span> kg</p>
+            <p>Posição: <span id="player-position"></span></p>
+            <p>Pé bom: <span id="player-dominant-foot"></span></p>
+            <p>Estilo de jogo: <span id="player-playstyle"></span></p>
+            <p>Cor da pele: <span id="player-skin-color"></span></p>
+            <p>Cor do cabelo: <span id="player-hair-color"></span></p>
+            <p>Estilo de cabelo: <span id="player-hair-style"></span></p>
+            <p>Cor da chuteira: <span id="player-boot-color"></span></p>
+            <p>Número preferido: <span id="player-jersey-number"></span></p>
+            <p>Time do coração: <span id="player-favorite-team"></span></p>
+            <p>Clube Atual: <span id="player-club">Nenhum</span></p>
+            <p>Overall: <span id="player-overall">75</span></p>
+            </div>
+        </div>
+        <h3>Estatísticas da Carreira</h3>
+        <div class="player-attributes" id="career-stats">
+            <div class="attribute-item"><h4>Gols:</h4><p id="stat-goals">0</p></div>
+            <div class="attribute-item"><h4>Assistências:</h4><p id="stat-assists">0</p></div>
+            <div class="attribute-item"><h4>Partidas:</h4><p id="stat-matches">0</p></div>
+            <div class="attribute-item"><h4>Títulos:</h4><p id="stat-titles">0</p></div>
+        </div>
+        <div class="event-log">
+            <h3>Registro de Eventos</h3>
+            <ul id="events-list">
+            <!-- Events will be loaded here -->
+            </ul>
+        </div>
+      </div>
+
+      <!-- Social Circle Sub-Panel -->
+      <div id="circulo-social-sub-panel" class="player-sub-panel">
+        <h3>Círculo Social</h3>
+        <div class="social-category">
+            <h4>Família</h4>
+            <div class="social-input-group">
+                <input type="text" id="family-member-name" placeholder="Nome do familiar">
+                <input type="text" id="family-member-relation" placeholder="Ex: Mãe, Irmão">
+                <button onclick="addFamilyMember()">Adicionar Familiar</button>
+            </div>
+            <ul id="family-list" class="social-list"></ul>
+        </div>
+
+        <div class="social-category">
+            <h4>Amigos</h4>
+            <div class="social-input-group">
+                <input type="text" id="friend-name" placeholder="Nome do amigo">
+                <input type="text" id="friend-notes" placeholder="Ex: Desde a infância, Colega de time">
+                <button onclick="addFriend()">Adicionar Amigo</button>
+            </div>
+            <ul id="friends-list" class="social-list"></ul>
+        </div>
+
+        <div class="social-category">
+            <h4>Relacionamento</h4>
+            <div class="social-input-group">
+                <input type="text" id="relationship-partner-name" placeholder="Nome do(a) parceiro(a)">
+                <input type="text" id="relationship-status" placeholder="Ex: Namoro, Casamento">
+                <button onclick="addRelationship()">Adicionar Relacionamento</button>
+            </div>
+            <ul id="relationships-list" class="social-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Decisions Section -->
+    <section id="decisoes">
+      <h2>Decisões da Carreira</h2>
+      
+      <!-- New Club Offers Section -->
+      <h3>Propostas de Clubes</h3>
+      <div id="club-offers-list" class="club-offers-container">
+        <!-- Club offers will be loaded here -->
+      </div>
+      <p style="text-align: center; margin-top: 1.5rem; font-size: 1rem; color: rgba(255,255,255,0.6);">
+        (Escolha um clube acima para assinar seu primeiro contrato!)
+      </p>
+
+      <hr style="border-color: rgba(255,255,255,0.1); margin: 3rem 0;">
+
+      <div id="decision-prompt" class="decision-container" style="display:none;">
+        <h3 id="decision-question"></h3>
+        <p id="decision-description"></p>
+        <div id="decision-options" class="decision-options">
+          <!-- Decision buttons here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Attributes and Skill Tree Section -->
+    <section id="atributos">
+      <div class="attributes-header">
+        <h3>ATRIBUTOS</h3>
+        <div class="info-text">Nível: <span id="player-level">1</span> | XP para o próximo: <span id="xp-to-next-level">XXX</span> | Pontos de Habilidade: <span id="skill-points-available">0</span></div>
+      </div>
+
+      <div class="attributes-container">
+        <div class="attributes-categories" id="attributes-categories">
+          <!-- Category buttons will be loaded here -->
+        </div>
+        <div class="skill-tree-display">
+            <!-- Skill tree will be rendered here dynamically -->
+            <canvas id="skill-tree-lines-canvas" class="skill-tree-lines"></canvas>
+            <div id="skill-tree-grid" class="skill-tree-grid"></div>
+        </div>
+        <div class="skill-details-panel">
+          <h3>Detalhes da Habilidade</h3>
+          <p id="skill-detail-name">Selecione uma habilidade para ver os detalhes.</p>
+          <p id="skill-detail-description"></p>
+          <p class="cost" id="skill-detail-cost"></p>
+          <div id="skill-detail-effects">
+            <!-- Attribute changes will be listed here -->
+          </div>
+          <button id="unlock-skill-button" disabled>Desbloquear (0 SP)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Screen Section -->
+    <section id="progresso">
+      <h2>Progresso do Jogador</h2>
+      <div class="progress-section">
+        <div class="progress-label">XP Total: <span id="current-xp">0</span> / <span id="max-xp">1000</span></div>
+        <div class="progress-bar-container xp-bar">
+          <div class="progress-bar" id="xp-bar" style="width:0%;">0%</div>
+        </div>
+      </div>
+      <div class="progress-section">
+        <div class="progress-label">Forma: <span id="current-form">75</span>%</div>
+        <div class="progress-bar-container form-bar">
+          <div class="progress-bar" id="form-bar" style="width:75%;">75%</div>
+        </div>
+      </div>
+      <div class="progress-section">
+        <div class="progress-label">Moral: <span id="current-moral">80</span>%</div>
+        <div class="progress-bar-container moral-bar">
+          <div class="progress-bar" id="moral-bar" style="width:80%;">80%</div>
+        </div>
+      </div>
+      <h3>Objetivos e Conquistas</h3>
+      <div id="objetivos-lista">
+        <!-- Objectives will be loaded here dynamically -->
+      </div>
+    </section>
+
+    <!-- NEW: Editing (PlayStyles) Section -->
+    <section id="edicao">
+      <h2>Edição de PlayStyles</h2>
+      <div class="attributes-header">
+        <h3>PlayStyles</h3>
+        <div class="info-text">Pontos de Habilidade Disponíveis: <span id="playstyle-skill-points-available">0</span></div>
+      </div>
+
+      <div class="playstyles-container">
+        <div class="playstyles-categories" id="playstyles-categories">
+          <!-- PlayStyle category buttons will be loaded here -->
+        </div>
+        <div class="playstyles-grid-display" id="playstyles-grid">
+          <!-- PlayStyle cards will be loaded here -->
+        </div>
+        <div class="playstyle-details-panel">
+          <h3>Detalhes do PlayStyle</h3>
+          <p id="playstyle-detail-name">Selecione um PlayStyle para ver os detalhes.</p>
+          <p id="playstyle-detail-description"></p>
+          <p class="cost" id="playstyle-detail-cost"></p>
+          <div id="playstyle-detail-effects">
+            <!-- Attribute changes will be listed here -->
+          </div>
+          <button id="equip-playstyle-button" disabled>Equipar (0 SP)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW: Celular (Mobile Phone) Section -->
+    <section id="celular">
+      <h2>Celular</h2>
+      <div class="cellular-app-container">
+        <div class="iphone-frame">
+          <div class="iphone-dynamic-island"></div>
+          <div class="iphone-screen">
+            <div class="cellular-app-nav">
+                <button onclick="switchCellularApp('conversas')" class="active">Conversas</button>
+                <button onclick="switchCellularApp('email')">E-mail</button>
+                <button onclick="switchCellularApp('google')">Google</button>
+                <button onclick="switchCellularApp('instagram')">Instagram</button>
+                <button onclick="switchCellularApp('x')">X</button>
+                <button onclick="switchCellularApp('dynasty8')">Dynasty 8</button>
+                <button onclick="switchCellularApp('legendarymotorsport')">Legendary Motorsport</button>
+                <button onclick="switchCellularApp('pandmcycles')">Pedal & Metal</button>
+            </div>
+
+            <div class="cellular-app-content">
+              <!-- Conversas App -->
+              <div id="conversas-app" class="cellular-app-panel active">
+                <h3>Conversas</h3>
+                <div class="contact-list" id="conversas-contact-list">
+                  <!-- Contacts will be loaded here -->
+                </div>
+                <div id="active-chat-window" style="display:none;">
+                  <h4>Chat com: <span id="chat-contact-name"></span></h4>
+                  <div class="chat-window" id="chat-messages">
+                    <!-- Messages will be loaded here -->
+                  </div>
+                  <div class="chat-input">
+                    <input type="text" id="chat-message-input" placeholder="Digite sua mensagem...">
+                    <button onclick="sendChatMessage()">Enviar</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- E-mail App -->
+              <div id="email-app" class="cellular-app-panel">
+                <h3>E-mail</h3>
+                <div class="email-list" id="email-inbox">
+                  <!-- Emails will be loaded here -->
+                </div>
+                <div id="email-viewer" class="email-content" style="display:none;">
+                  <h4>De: <span id="email-sender"></span></h4>
+                  <h4>Assunto: <span id="email-subject"></span></h4>
+                  <p id="email-body"></p>
+                  <button onclick="closeEmailViewer()">Voltar</button>
+                </div>
+              </div>
+
+              <!-- Google App -->
+              <div id="google-app" class="cellular-app-panel">
+                <h3>Google</h3>
+                <div class="search-bar">
+                  <input type="text" id="google-search-input" placeholder="Pesquisar no Google...">
+                  <button onclick="performGoogleSearch()">Pesquisar</button>
+                </div>
+                <div class="search-results" id="google-search-results">
+                  <p>Resultados da pesquisa aparecerão aqui.</p>
+                </div>
+              </div>
+
+              <!-- Instagram App -->
+              <div id="instagram-app" class="cellular-app-panel">
+                <h3>Instagram</h3>
+                <div class="instagram-profile">
+                  <img id="instagram-profile-pic" src="images/AVATAR.png" alt="Perfil Jogador" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0E0E0E/32FF55?text=AVATAR';">
+                  <h4><span id="instagram-username">@seu_jogador</span></h4>
+                  <p>Overall 75 | Meia-Atacante</p>
+                </div>
+                <h4>Feed de Fotos</h4>
+                <div class="instagram-posts" id="instagram-feed">
+                  <!-- Instagram posts will be loaded here -->
+                </div>
+              </div>
+
+              <!-- X (Twitter) App -->
+              <div id="x-app" class="cellular-app-panel">
+                <h3>X (Twitter)</h3>
+                <div class="tweet-feed" id="x-feed">
+                  <!-- Tweets will be loaded here -->
+                </div>
+              </div>
+
+              <!-- Dynasty 8 Real Estates App -->
+              <div id="dynasty8-app" class="cellular-app-panel">
+                <h3>Dynasty 8 Real Estates</h3>
+                <div class="website-content" id="dynasty8-properties">
+                  <!-- Properties will be loaded here -->
+                </div>
+              </div>
+
+              <!-- Legendary Motorsport App -->
+              <div id="legendarymotorsport-app" class="cellular-app-panel">
+                <h3>Legendary Motorsport</h3>
+                <div class="website-content" id="legendarymotorsport-vehicles">
+                  <!-- Vehicles will be loaded here -->
+                </div>
+              </div>
+
+              <!-- Pedal and Metal Cycles App -->
+              <div id="pandmcycles-app" class="cellular-app-panel">
+                <h3>Pedal & Metal Cycles</h3>
+                <div class="website-content" id="pandmcycles-bikes">
+                  <!-- Bikes will be loaded here -->
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW: Calendar Section -->
+    <section id="calendario">
+      <h2>Calendário</h2>
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <h3 id="current-month-year">Junho 2025</h3>
+          <div class="calendar-navigation">
+            <button onclick="advanceDay(1)">Avançar 1 Dia</button>
+            <button onclick="advanceDay(7)">Avançar 1 Semana</button>
+            <button onclick="advanceDay(30)">Avançar 1 Mês</button>
+          </div>
+        </div>
+        <div class="calendar-grid" id="calendar-grid">
+          <!-- Calendar days will be loaded here -->
+        </div>
+        <div class="add-event-form">
+          <div>
+            <label for="event-date-input">Data do Evento:</label>
+            <input type="date" id="event-date-input">
+          </div>
+          <div>
+            <label for="event-opponent-input">Adversário / Descrição:</label>
+            <input type="text" id="event-opponent-input" placeholder="Ex: Treino, Jogo vs...">
+          </div>
+          <div>
+            <label for="event-type-select">Tipo de Evento:</label>
+            <select id="event-type-select">
+              <option value="Jogo">Jogo</option>
+              <option value="Treino">Treino</option>
+              <option value="Descanso">Descanso</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+          <button onclick="addCalendarEvent()">Adicionar Evento</button>
+        </div>
+        <div class="event-log" style="margin-top: 1.5rem;">
+          <h3>Próximos Eventos</h3>
+          <ul id="upcoming-events-list">
+            <!-- Upcoming events will be loaded here -->
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW: Press Conference Section -->
+    <section id="imprensa">
+      <h2>Conferência de Imprensa</h2>
+      <img src="images/CONFERENCIA DE IMPRENSA.png" alt="[Image of a press conference]" class="press-conference-image" onerror="this.onerror=null;this.src='https://placehold.co/600x300/0E0E0E/32FF55?text=CONFERENCIA+DE+IMPRENSA';">
+      <p>Prepare-se para responder às perguntas dos jornalistas!</p>
+      <button class="press-button" onclick="startPressConference()">Começar Conferência</button>
+    </section>
+
+  </div>
+
+  <!-- Custom Alert/Modal HTML -->
+  <div id="customAlertModal" class="modal-backdrop">
+    <div class="custom-modal">
+      <h3 id="modalTitle"></h3>
+      <p id="modalMessage"></p>
+      <button onclick="closeCustomAlert()">OK</button>
+    </div>
+  </div>
+
+  <!-- Cinematic Overlay for Press Conference -->
+  <div id="pressConferenceCinematic" class="cinematic-overlay">
+    <div class="cinematic-content">
+      <p class="journalist-speech" id="journalist-question">A conferência de imprensa começará em breve...</p>
+      <p class="journalist-info" id="journalist-info"></p>
+      <textarea class="player-response-input" id="player-press-response" placeholder="Sua resposta..."></textarea>
+      <button class="press-button" id="submit-press-response" onclick="submitPressResponse()">Responder</button>
+      <div class="press-conference-feedback" id="press-conference-feedback" style="display:none;"></div>
+      <button class="press-button" id="next-question-button" style="display:none;" onclick="nextPressQuestion()">Próxima Pergunta</button>
+      <button class="press-button" id="end-conference-button" style="display:none;" onclick="endPressConference()">Encerrar Conferência</button>
+    </div>
+  </div>
+
+
+  <script>
+    // Global player state
+    let player = {
+      characterCreated: false,
+      name: "",
+      age: null,
+      nationality: "",
+      height: null,
+      weight: null,
+      position: "",
+      dominantFoot: "",
+      playStyle: "",
+      skinColor: "",
+      hairColor: "",
+      hairStyle: "",
+      bootColor: "",
+      jerseyNumber: null,
+      favoriteTeam: "",
+      portraitUrl: "images/AVATAR.png", // Local path for avatar
+      club: "Nenhum",
+      overall: 75,
+
+      socialCircle: { // New property for social connections
+        family: [],
+        friends: [],
+        relationships: []
+      },
+
+      stats: {
+        goals: 0,
+        assists: 0,
+        matches: 0,
+        titles: 0
+      },
+      attributes: {
+        pace: 70,
+        shooting: 65,
+        passing: 68,
+        dribbling: 72,
+        defending: 40,
+        physical: 60,
+        goalkeeping: 10
+      },
+      progress: {
+        xp: 0,
+        maxXp: 1000,
+        level: 1,
+        xpToNextLevel: 250,
+        skillPoints: 0,
+        form: 75,
+        moral: 80,
+        objectives: {} // Initialize objectives as an empty object
+      },
+      unlockedEvents: [],
+      unlockedSkills: {},
+      equippedPlayStyles: {},
+      contacts: {
+        'agente': { name: 'Seu Agente', chatHistory: [{ sender: 'other', message: 'Olá Jogador, tudo bem?' }] },
+        'treinador': { name: 'Seu Treinador', chatHistory: [{ sender: 'other', message: 'Bom treino hoje!' }] },
+        'rival': { name: 'Rival', chatHistory: [{ sender: 'other', message: 'Prepare-se para o próximo jogo, Jogador!' }] }
+      },
+      emails: [
+        { id: 'email-1', sender: 'Agência de Marketing', subject: 'Nova Oportunidade de Patrocínio', body: 'Olá Jogador, temos uma nova proposta de patrocínio para você. Gostaríamos de discutir os detalhes em breve.', read: false },
+        { id: 'email-2', sender: 'Gerente do Clube', subject: 'Reunião de Desempenho Semanal', body: 'Jogador, por favor, compareça à minha sala amanhã às 10h para discutirmos seu desempenho na última partida.', read: false }
+      ],
+      instagramPosts: [
+        { id: 'insta-1', user: 'futebol_news', caption: 'Seu Jogador brilha em campo!', imageUrl: 'images/GOL JOGADOR.png' },
+        { id: 'insta-2', user: 'fanaticos_fc', caption: 'Novo ídolo na área!', imageUrl: 'images/FANS.png' }
+      ],
+      xTweets: [
+        { id: 'x-1', author: '@ComentaristaFutebol', content: 'Seu Jogador tem sido uma revelação nesta temporada. Olho nele!' },
+        { id: 'x-2', author: '@TorcidaApaixonada', content: 'Que jogo do seu Jogador! Craque!' }
+      ],
+      properties: [
+        {
+          id: 'prop-1',
+          name: 'Apartamento de Luxo',
+          description: 'Apartamento moderno e espaçoso com vista panorâmica da cidade e acabamentos de alto padrão. Condomínio com infraestrutura completa e segurança 24h. Ideal para quem busca conforto e sofisticação.',
+          price: 'R$ 8.500.000',
+          imageUrl: 'images/APARTAMENTO LUXO RJ.png',
+          location: 'Rio de Janeiro, RJ - Leblon'
+        },
+        {
+          id: 'prop-2',
+          name: 'Mansão Exclusiva',
+          description: 'Deslumbrante mansão com arquitetura contemporânea, vasta área verde, piscina com borda infinita e quadra de tênis. Ambientes integrados e iluminados, perfeita para lazer e privacidade.',
+          price: 'R$ 25.000.000',
+          imageUrl: 'images/MANSAO MIAMI.png',
+          location: 'Miami, FL, EUA - Star Island'
+        },
+        {
+          id: 'prop-3',
+          name: 'Cobertura em Nova York',
+          description: 'Cobertura duplex luxuosa no coração de Manhattan, com terraço privativo e vistas deslumbrantes do skyline. Perto dos melhores restaurantes e atrações da cidade.',
+          price: 'R$ 40.000.000',
+          imageUrl: 'images/COBERTURA NYC.png',
+          location: 'Nova York, NY, EUA - Midtown'
+        }
+      ],
+      vehicles: [
+        {
+          id: 'car-1',
+          name: 'McLaren 720S Coupé',
+          year: 2023,
+          mileage: '5.000 km',
+          description: 'Desempenho inigualável com design arrojado. Único dono, todas as revisões em concessionária. Aceleração de 0 a 100 km/h em menos de 3 segundos.',
+          price: 'R$ 3.500.000',
+          imageUrl: 'images/MCLAREN 720S.png',
+          location: 'Dubai, Emirados Árabes Unidos'
+        },
+        {
+          id: 'car-2',
+          name: 'Porsche 911 Carrera S',
+          year: 2022,
+          mileage: '12.500 km',
+          description: 'O ícone reimaginado. Veículo impecável, sem detalhes, pronto para ser pilotado. Combinação ideal de performance esportiva e elegância para o dia a dia.',
+          price: 'R$ 1.800.000',
+          imageUrl: 'images/PORSCHE 911.png',
+          location: 'Munique, Alemanha'
+        },
+        {
+          id: 'car-3',
+          name: 'Audi R8 V10 quattro',
+          year: 2021,
+          mileage: '8.200 km',
+          description: 'A emoção de um motor V10 atmosférico. Carro de garagem, baixa quilometragem, revisão em dia. Experiência de condução visceral aliada ao luxo e tecnologia alemã.',
+          price: 'R$ 2.200.000',
+          imageUrl: 'images/AUDI R8.png',
+          location: 'Tóquio, Japão'
+        },
+        {
+            id: 'car-4',
+            name: 'Mercedes-AMG GT R',
+            year: 2020,
+            mileage: '18.000 km',
+            description: 'Potência e controle em perfeita harmonia. Veículo customizado, desenvolvido para as pistas e adaptado para as ruas, oferecendo uma experiência de condução incomparável.',
+            price: 'R$ 2.000.000',
+            imageUrl: 'images/AMG GT R.png',
+            location: 'Londres, Reino Unido'
+        },
+        {
+            id: 'car-5',
+            name: 'Ferrari F8 Tributo',
+            year: 2023,
+            mileage: '2.800 km',
+            description: 'A evolução da performance Ferrari. Veículo para colecionadores, como novo. Homenageia a tradição e impulsiona o futuro com um motor V8 premiado e design aerodinâmico.',
+            price: 'R$ 4.000.000',
+            imageUrl: 'images/FERRARI F8.png',
+            location: 'Monte Carlo, Mônaco'
+        }
+      ],
+      bikes: [
+        { id: 'bike-1', name: 'BMX Freestyle', description: 'Para manobras radicais e diversão urbana.', price: '€800', imageUrl: 'images/BMX.png' },
+        { id: 'bike-2', name: 'Mountain Bike Pro', description: 'Ideal para trilhas e aventuras off-road.', price: '€2.500', imageUrl: 'images/MTB.png' }
+      ],
+      currentDate: new Date(), // Current game date
+      userGameSchedule: [] // New: User-defined game schedule
+    };
+
+    let selectedSkillId = null;
+    let selectedPlayStyleId = null;
+    let currentCellularApp = 'conversas';
+    let currentChatContact = null;
+    let currentPlayerSubTab = 'perfil'; // Default sub-tab for 'Jogador' section
+
+    // --- Custom Alert/Modal Functions ---
+    function showCustomAlert(title, message) {
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalMessage').innerText = message;
+      document.getElementById('customAlertModal').classList.add('active');
+    }
+
+    function closeCustomAlert() {
+      document.getElementById('customAlertModal').classList.remove('active');
+    }
+
+    // --- Tab Switching Functions ---
+    function switchTab(tabId) {
+      if (!player.characterCreated && tabId !== 'criacao') {
+        showCustomAlert('Personagem Não Criado', 'Você precisa criar seu personagem antes de acessar outras abas!');
+        return;
+      }
+
+      if (tabId === 'imprensa' && player.club === 'Nenhum') {
+        showCustomAlert('Clube Necessário', 'Você precisa escolher um clube antes de participar de uma conferência de imprensa.');
+        return;
+      }
+
+      // Deactivate all sections first
+      document.querySelectorAll('section').forEach(sec => {
+        sec.classList.remove('active');
+        sec.style.display = 'none'; // Set display to none immediately
+      });
+
+      // Activate the selected section
+      const activeSection = document.getElementById(tabId);
+      if (!activeSection) {
+          console.error(`Elemento com ID "${tabId}" não encontrado.`);
+          return; // Previne o erro se o elemento não for encontrado
+      }
+      activeSection.style.display = 'block';
+      activeSection.classList.add('active'); // Add active class immediately
+
+      // Specific updates for each tab
+      if (tabId === 'progresso') {
+        updateProgressBars();
+        loadObjectives();
+      }
+      if (tabId === 'jogador') {
+        switchPlayerSubTab(currentPlayerSubTab); // Re-activate current sub-tab
+        updatePlayerProfile(); // Update profile on main tab switch
+      }
+      if (tabId === 'atributos') {
+        updateAttributesHeader();
+        loadAttributeCategories();
+        renderSkillTree(currentAttributeCategory);
+      }
+      if (tabId === 'edicao') {
+        updatePlayStyleHeader();
+        loadPlayStyleCategories();
+        renderPlayStyles(currentPlayStyleCategory);
+      }
+      if (tabId === 'celular') {
+        switchCellularApp(currentCellularApp);
+      }
+      if (tabId === 'calendario') {
+        renderCalendar();
+      }
+
+      // Update active state for main navigation buttons
+      document.querySelectorAll('nav button').forEach(btn => {
+          btn.classList.remove('active');
+      });
+      const tabButton = document.getElementById(`${tabId}-tab-button`);
+      if (tabButton) { // Adiciona verificação nula aqui também
+          tabButton.classList.add('active');
+      } else {
+          console.error(`Botão com ID "${tabId}-tab-button" não encontrado.`);
+      }
+    }
+
+    // --- Player Sub-Tab Switching Functions ---
+    function switchPlayerSubTab(subTabId) {
+        // Deactivate all player sub-panels
+        document.querySelectorAll('.player-sub-panel').forEach(panel => {
+            panel.classList.remove('active');
+            panel.style.display = 'none';
+        });
+        // Deactivate all player sub-nav buttons
+        document.querySelectorAll('.player-sub-nav').forEach(nav => { // Seleciona a div que contém os botões
+          nav.querySelectorAll('button').forEach(button => { // Seleciona os botões dentro dela
+            button.classList.remove('active');
+          });
+        });
+
+
+        // Activate the selected player sub-panel
+        const activeSubPanel = document.getElementById(`${subTabId}-sub-panel`);
+        if (activeSubPanel) {
+            activeSubPanel.style.display = 'block';
+            setTimeout(() => {
+                activeSubPanel.classList.add('active');
+            }, 10);
+            currentPlayerSubTab = subTabId; // Update current active sub-tab
+
+            // Activate the corresponding sub-nav button
+            const subNavButton = document.querySelector(`.player-sub-nav button[onclick="switchPlayerSubTab('${subTabId}')"]`);
+            if (subNavButton) {
+              subNavButton.classList.add('active');
+            }
+
+
+            // Load specific content for sub-tabs
+            if (subTabId === 'perfil') {
+                updatePlayerProfile();
+            } else if (subTabId === 'circulo-social') {
+                renderSocialCircle();
+            }
+        }
+    }
+
+    // --- Navigation Button State ---
+    function setNavigationButtonsState(enabled) {
+        const navButtons = document.querySelectorAll('nav button');
+        navButtons.forEach(button => {
+            if (button.id !== 'criacao-tab-button') {
+                button.disabled = !enabled;
+            }
+        });
+        // Specific rule for 'imprensa' tab
+        document.getElementById('imprensa-tab-button').disabled = (player.club === 'Nenhum');
+    }
+
+    // --- Character Creation Functions ---
+    function createCharacter() {
+        const name = document.getElementById('player-name-input').value.trim();
+        const nationality = document.getElementById('player-nationality-input').value.trim();
+        const age = parseInt(document.getElementById('player-age-input').value);
+        const height = parseInt(document.getElementById('player-height-input').value);
+        const weight = parseInt(document.getElementById('player-weight-input').value);
+        const position = document.getElementById('player-position-select').value;
+        const dominantFoot = document.getElementById('player-foot-select').value;
+        const playStyle = document.getElementById('player-playstyle-select').value;
+        const skinColor = document.getElementById('player-skin-color-input').value.trim();
+        const hairColor = document.getElementById('player-hair-color-input').value.trim();
+        const hairStyle = document.getElementById('player-hair-style-input').value.trim();
+        const bootColor = document.getElementById('player-boot-color-input').value.trim();
+        const jerseyNumber = parseInt(document.getElementById('player-jersey-number-input').value);
+        const favoriteTeam = document.getElementById('player-favorite-team-input').value.trim();
+
+        // Basic validation
+        if (!name || !nationality || isNaN(age) || isNaN(height) || isNaN(weight) || !position || !dominantFoot || !playStyle || !skinColor || !hairColor || !hairStyle || !bootColor || isNaN(jerseyNumber) || !favoriteTeam) {
+            showCustomAlert('Erro de Criação', 'Por favor, preencha todas as informações do seu personagem.');
+            return;
+        }
+
+        // Update player object
+        player.name = name;
+        player.nationality = nationality;
+        player.age = age;
+        player.height = height;
+        player.weight = weight;
+        player.position = position;
+        player.dominantFoot = dominantFoot;
+        player.playStyle = playStyle;
+        player.skinColor = skinColor;
+        player.hairColor = hairColor;
+        player.hairStyle = hairStyle;
+        player.bootColor = bootColor;
+        player.jerseyNumber = jerseyNumber;
+        player.favoriteTeam = favoriteTeam;
+        player.characterCreated = true;
+
+        saveGame();
+        updatePlayerProfile(); // Update the displayed profile
+        setNavigationButtonsState(true); // Enable other tabs
+        showCustomAlert('Personagem Criado!', `Bem-vindo, ${player.name}! Sua jornada começou.`);
+        addEventToLog(`Personagem ${player.name} criado.`);
+        switchTab('jogador'); // Switch to player profile tab
+        addXP(50); // Give some initial XP for demonstration
+    }
+
+    // Handle Profile Picture Upload
+    function handleProfilePictureUpload() {
+        const input = document.getElementById('profile-picture-input');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                player.portraitUrl = e.target.result;
+                document.getElementById('player-portrait').src = e.target.result;
+                document.getElementById('instagram-profile-pic').src = e.target.result; // Update Instagram profile pic
+                saveGame();
+                showCustomAlert('Foto de Perfil Atualizada!', 'Sua nova foto foi salva.');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // --- Player Profile & Stats Functions ---
+    function updatePlayerProfile() {
+      document.getElementById('player-name').innerText = player.name;
+      document.getElementById('player-age').innerText = player.age;
+      document.getElementById('player-nationality').innerText = player.nationality;
+      document.getElementById('player-height').innerText = player.height;
+      document.getElementById('player-weight').innerText = player.weight;
+      document.getElementById('player-position').innerText = player.position;
+      document.getElementById('player-dominant-foot').innerText = player.dominantFoot;
+      document.getElementById('player-playstyle').innerText = player.playStyle;
+      document.getElementById('player-skin-color').innerText = player.skinColor;
+      document.getElementById('player-hair-color').innerText = player.hairColor;
+      document.getElementById('player-hair-style').innerText = player.hairStyle;
+      document.getElementById('player-boot-color').innerText = player.bootColor;
+      document.getElementById('player-jersey-number').innerText = player.jerseyNumber;
+      document.getElementById('player-favorite-team').innerText = player.favoriteTeam;
+      document.getElementById('player-club').innerText = player.club;
+      document.getElementById('player-overall').innerText = player.overall;
+
+      document.getElementById('player-portrait').src = player.portraitUrl; // Set portrait
+      document.getElementById('instagram-profile-pic').src = player.portraitUrl; // Also update Instagram pic
+      document.getElementById('instagram-username').innerText = `@${player.name.replace(/\s/g, '_').toLowerCase()}`; // Generate Instagram username
+
+      document.getElementById('stat-goals').innerText = player.stats.goals;
+      document.getElementById('stat-assists').innerText = player.stats.assists;
+      document.getElementById('stat-matches').innerText = player.stats.matches;
+      document.getElementById('stat-titles').innerText = player.stats.titles;
+      loadEventLog();
+    }
+
+    function updatePlayerAttributes() {
+      // This function now primarily serves as a placeholder.
+      // Detailed attribute display is in the skill tree panel.
+    }
+
+    // --- Social Circle Functions ---
+    function renderSocialCircle() {
+        renderFamilyList();
+        renderFriendsList();
+        renderRelationshipsList();
+    }
+
+    function addFamilyMember() {
+        const name = document.getElementById('family-member-name').value.trim();
+        const relation = document.getElementById('family-member-relation').value.trim();
+        if (name && relation) {
+            const newContactId = `family-${name.replace(/\s/g, '_').toLowerCase()}`;
+            player.socialCircle.family.push({ name, relation, contactId: newContactId });
+            player.contacts[newContactId] = { name: `${name} (${relation})`, chatHistory: [{ sender: 'other', message: `Olá! Que bom te ver por aqui, ${player.name}!` }] };
+            document.getElementById('family-member-name').value = '';
+            document.getElementById('family-member-relation').value = '';
+            saveGame();
+            renderFamilyList();
+            showCustomAlert('Familiar Adicionado', `${name} (${relation}) adicionado à sua família e contatos.`);
+            renderContacts(); // Update contacts list in cellular app
+        } else {
+            showCustomAlert('Erro', 'Por favor, insira o nome e a relação do familiar.');
+        }
+    }
+
+    function renderFamilyList() {
+        const familyListDiv = document.getElementById('family-list');
+        familyListDiv.innerHTML = '';
+        player.socialCircle.family.forEach((member, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `${member.name} - ${member.relation} <button onclick="removeSocialItem('family', ${index})">Remover</button>`;
+            familyListDiv.appendChild(li);
+        });
+    }
+
+    function addFriend() {
+        const name = document.getElementById('friend-name').value.trim();
+        const notes = document.getElementById('friend-notes').value.trim();
+        if (name) {
+            const newContactId = `friend-${name.replace(/\s/g, '_').toLowerCase()}`;
+            player.socialCircle.friends.push({ name, notes, contactId: newContactId });
+            player.contacts[newContactId] = { name: `${name} (Amigo)`, chatHistory: [{ sender: 'other', message: `E aí, ${player.name}! Tudo bem?` }] };
+            document.getElementById('friend-name').value = '';
+            document.getElementById('friend-notes').value = '';
+            saveGame();
+            renderFriendsList();
+            showCustomAlert('Amigo Adicionado', `${name} adicionado aos seus amigos e contatos.`);
+            renderContacts(); // Update contacts list in cellular app
+        } else {
+            showCustomAlert('Erro', 'Por favor, insira o nome do amigo.');
+        }
+    }
+
+    function renderFriendsList() {
+        const friendsListDiv = document.getElementById('friends-list');
+        friendsListDiv.innerHTML = '';
+        player.socialCircle.friends.forEach((friend, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `${friend.name} (${friend.notes}) <button onclick="removeSocialItem('friends', ${index})">Remover</button>`;
+            friendsListDiv.appendChild(li);
+        });
+    }
+
+    function addRelationship() {
+        const name = document.getElementById('relationship-partner-name').value.trim();
+        const status = document.getElementById('relationship-status').value.trim();
+        if (name && status) {
+            // For simplicity, only allow one relationship at a time, or clear previous ones
+            player.socialCircle.relationships = []; // Clear existing relationships
+            const newContactId = `relationship-${name.replace(/\s/g, '_').toLowerCase()}`;
+            player.contacts[newContactId] = { name: `${name} (Parceiro)`, chatHistory: [{ sender: 'other', message: `Oi, amor! Pensando em você. ❤️` }] };
+
+            player.socialCircle.relationships.push({ name, status, contactId: newContactId });
+            document.getElementById('relationship-partner-name').value = '';
+            document.getElementById('relationship-status').value = '';
+            saveGame();
+            renderRelationshipsList();
+            showCustomAlert('Relacionamento Adicionado', `Relacionamento com ${name} (${status}) adicionado aos seus contatos.`);
+            renderContacts(); // Update contacts list in cellular app
+        } else {
+            showCustomAlert('Erro', 'Por favor, insira o nome do(a) parceiro(a) e o status.');
+        }
+    }
+
+    function renderRelationshipsList() {
+        const relationshipsListDiv = document.getElementById('relationships-list');
+        relationshipsListDiv.innerHTML = '';
+        player.socialCircle.relationships.forEach((rel, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `${rel.name} - ${rel.status} <button onclick="removeSocialItem('relationships', ${index})">Remover</button>`;
+            relationshipsListDiv.appendChild(li);
+        });
+    }
+
+    function removeSocialItem(category, index) {
+        const itemToRemove = player.socialCircle[category][index];
+        if (itemToRemove && itemToRemove.contactId) {
+            delete player.contacts[itemToRemove.contactId]; // Remove from contacts
+        }
+        player.socialCircle[category].splice(index, 1);
+        saveGame();
+        renderSocialCircle(); // Re-render all social lists
+        renderContacts(); // Re-render contacts list in cellular app
+        showCustomAlert('Item Removido', `O item foi removido do seu círculo social.`);
+    }
+
+    // --- Progress Bar Functions ---
+    function updateProgressBars() {
+      const xpPercentage = (player.progress.xp / player.progress.maxXp) * 100;
+      document.getElementById('current-xp').innerText = player.progress.xp;
+      document.getElementById('max-xp').innerText = player.progress.maxXp;
+      document.getElementById('xp-bar').style.width = `${xpPercentage}%`;
+      document.getElementById('xp-bar').innerText = `${Math.round(xpPercentage)}%`;
+
+      document.getElementById('current-form').innerText = player.progress.form;
+      document.getElementById('form-bar').style.width = `${player.progress.form}%`;
+      document.getElementById('form-bar').innerText = `${player.progress.form}%`;
+
+      document.getElementById('current-moral').innerText = player.progress.moral;
+      document.getElementById('moral-bar').style.width = `${player.progress.moral}%`;
+      document.getElementById('moral-bar').innerText = `${player.progress.moral}%`;
+    }
+
+    // Add XP and check for level up
+    function addXP(amount) {
+      player.progress.xp += amount;
+      let leveledUp = false;
+      while (player.progress.xp >= player.progress.maxXp) {
+        player.progress.xp -= player.progress.maxXp;
+        player.progress.level++;
+        player.overall = Math.min(99, player.overall + 1);
+        player.progress.skillPoints += 5;
+        player.progress.maxXp = Math.round(player.progress.maxXp * 1.2);
+        showCustomAlert('Nível Acima!', `Parabéns! Você alcançou o Nível ${player.progress.level}! Ganhou ${player.progress.skillPoints} Pontos de Habilidade!`);
+        addEventToLog(`Alcançou o Nível ${player.progress.level}.`);
+        leveledUp = true;
+      }
+      saveGame();
+      updateProgressBars();
+      updatePlayerProfile();
+      updateAttributesHeader();
+      updatePlayStyleHeader();
+      if (leveledUp) {
+        renderSkillTree(currentAttributeCategory);
+        renderPlayStyles(currentPlayStyleCategory);
+      }
+    }
+
+    // --- Club Offers Data & Functions ---
+    // Bundesliga Austríaca clubs
+    const allClubOffers = [
+        { name: "FC Red Bull Salzburg", league: "Bundesliga Austríaca", country: "Áustria", interest: 5, logo: "Red Bull Salzburg.png", contract: "€60.000/semana | Expectativas: Título da liga, Fase de grupos da UCL | Bônus: €25K por gol/assistência" },
+        { name: "SK Rapid Vienna", league: "Bundesliga Austríaca", country: "Áustria", interest: 4, logo: "Rapid Vienna.png", contract: "€40.000/semana | Expectativas: Vaga em competição europeia | Bônus: €15K por vitória importante" },
+        { name: "LASK", league: "Bundesliga Austríaca", country: "Áustria", interest: 4, logo: "LASK.png", contract: "€35.000/semana | Expectativas: Lutar pelo título, Fase de grupos da Conference League | Bônus: €10K por gol" },
+        { name: "FK Austria Vienna", league: "Bundesliga Austríaca", country: "Áustria", interest: 3, logo: "Austria Vienna.png", contract: "€30.000/semana | Expectativas: Meio de tabela | Bônus: €7K por clean sheet" },
+        { name: "Wolfsberger AC", league: "Bundesliga Austríaca", country: "Áustria", interest: 3, logo: "Wolfsberger AC.png", contract: "€28.000/semana | Expectativas: Manter-se na liga | Bônus: €8K por jogo com gol" },
+        { name: "TSV Hartberg", league: "Bundesliga Austríaca", country: "Áustria", interest: 2, logo: "TSV Hartberg.png", contract: "€20.000/semana | Expectativas: Evitar rebaixamento | Bônus: €5K por assistência" },
+        { name: "SCR Altach", league: "Bundesliga Austríaca", country: "Áustria", interest: 2, logo: "SCR Altach.png", contract: "€18.000/semana | Expectativas: Permanecer na primeira divisão | Bônus: 8% por cada jogo sem sofrer gol" },
+        { name: "WSG Tirol", league: "Bundesliga Austríaca", country: "Áustria", interest: 2, logo: "WSG Tirol.png", contract: "€17.000/semana | Expectativas: Lutar contra o rebaixamento | Bônus: €4K por vitória" },
+        { name: "FC Blau-Weiss Linz", league: "Bundesliga Austríaca", country: "Áustria", interest: 1, logo: "FC Blau-Weiss Linz.png", contract: "€15.000/semana | Expectativas: Sobreviver na liga | Bônus: €3K por jogo com gol" },
+        { name: "Grazer AK 1902", league: "Bundesliga Austríaca", country: "Áustria", interest: 1, logo: "Grazer AK 1902.png", contract: "€14.000/semana | Expectativas: Fazer uma campanha digna | Bônus: €2K por cada ponto conquistado" }
+    ];
+
+    // Function to get a random subset of clubs
+    function generateRandomOffers(count = 5) {
+        const shuffled = [...allClubOffers].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
+    function loadClubOffers() {
+      const offersList = document.getElementById('club-offers-list');
+      offersList.innerHTML = '';
+
+      const currentOffers = generateRandomOffers(); // Generate new random offers
+      
+      currentOffers.forEach(club => {
+        const card = document.createElement('div');
+        card.className = 'offer-card';
+        card.innerHTML = `
+          <img src="images/${club.logo}" alt="[Image of ${club.name}]" class="club-logo" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0E0E0E/32FF55?text=${club.name.replace(/\s/g, '+')}';">
+          <h3>${club.name}</h3>
+          <p>Liga: ${club.league} (${club.country})</p>
+          <p>Proposta: ${club.contract}</p>
+          <div class="stars">${'★'.repeat(club.interest)}${'☆'.repeat(5 - club.interest)}</div>
+          <button onclick="acceptClubOffer('${club.name}')">Aceitar Proposta</button>
+        `;
+        offersList.appendChild(card);
+      });
+    }
+
+    // Function to handle accepting a club offer
+    function acceptClubOffer(clubName) {
+      player.club = clubName;
+      addXP(100);
+      saveGame();
+      updatePlayerProfile();
+      setNavigationButtonsState(true); // Enable all tabs after accepting club
+      showCustomAlert('Contrato Assinado!', `Você assinou seu primeiro contrato profissional com o ${clubName}!`);
+      addEventToLog(`Assinou um contrato profissional com ${clubName}.`);
+      loadClubOffers(); // Generate and display new offers after one is accepted
+    }
+
+
+    // --- Objectives for the progress system ---
+    const objetivos = [
+      { id: 'primeiro-gol', description: 'Marcar seu primeiro gol', completed: false },
+      { id: 'primeira-assistencia', description: 'Dar sua primeira assistência', completed: false },
+      { id: 'vitoria-partida', description: 'Ganhar uma partida', completed: false },
+      { id: '5-gols', description: 'Marcar 5 gols na temporada', completed: false },
+      { id: 'artilheiro-liga', description: 'Ser artilheiro da liga', completed: false },
+      { id: 'ganhar-liga', description: 'Ganhar o título da liga nacional', completed: false },
+      { id: 'ganhar-champions', description: 'Ganhar a Champions League', completed: false }
+    ];
+
+    // Function to load and display objectives
+    function loadObjectives() {
+      const objetivosLista = document.getElementById('objetivos-lista');
+      objetivosLista.innerHTML = '';
+
+      objetivos.forEach(obj => {
+        const isCompleted = player.progress.objectives && player.progress.objectives[obj.id] || false;
+        
+        const objectiveItem = document.createElement('div');
+        objectiveItem.className = 'objective-item';
+        objectiveItem.innerHTML = `
+          <input type="checkbox" id="${obj.id}" ${isCompleted ? 'checked' : ''} onchange="toggleObjective('${obj.id}')">
+          <label for="${obj.id}">${obj.description}</label>
+        `;
+        objetivosLista.appendChild(objectiveItem);
+      });
+    }
+
+    // Function to toggle objective completion and save to localStorage
+    function toggleObjective(id) {
+      const checkbox = document.getElementById(id);
+      if (!player.progress.objectives) {
+        player.progress.objectives = {};
+      }
+      player.progress.objectives[id] = checkbox.checked;
+      saveGame();
+      showCustomAlert('Progresso Atualizado!', `Objetivo "${objetivos.find(o => o.id === id).description}" marcado como ${checkbox.checked ? 'concluído' : 'não concluído'}.`);
+    }
+
+    // --- Interactive Decisions Data & Functions ---
+    const decisions = [
+      {
+        id: 'interview-1',
+        question: 'O que você achou da sua primeira partida como profissional?',
+        description: 'Você acaba de jogar sua primeira partida oficial. A imprensa está ansiosa para ouvir suas primeiras impressões.',
+        options: [
+          { text: 'Fiquei muito feliz com a vitória da equipe. O individual é secundário.', effect: () => { player.progress.moral = Math.min(100, player.progress.moral + 5); addEventToLog('Deu uma entrevista modesta.'); showCustomAlert('Entrevista Concluída', 'Sua resposta modesta agradou à mídia e aos fãs.'); addXP(20); } },
+          { text: 'Ainda posso melhorar, mas sinto que mostrei meu potencial.', effect: () => { player.progress.form = Math.min(100, player.progress.form + 5); addEventToLog('Deu uma entrevista confiante.'); showCustomAlert('Entrevista Concluída', 'Sua confiança foi bem recebida, mas com um toque de humildade.'); addXP(20); } },
+          { text: 'Foi um desastre. Preciso treinar muito mais.', effect: () => { player.progress.moral = Math.max(0, player.progress.moral - 10); addEventToLog('Deu uma entrevista pessimista.'); showCustomAlert('Entrevista Concluída', 'Sua honestidade é admirável, mas a mídia pode pegar pesado.'); addXP(10); } }
+        ]
+      },
+      {
+        id: 'training-dilemma',
+        question: 'Você tem a opção de treinar duro ou descansar para o próximo jogo.',
+        description: 'Um treino extra promete aumentar seus atributos, mas o descanso pode melhorar sua forma e evitar lesões.',
+        options: [
+          { text: 'Treinar duro, quero melhorar logo!', effect: () => { player.overall = Math.min(99, player.overall + 1); player.progress.form = Math.max(0, player.progress.form - 5); addEventToLog('Treinou duro e melhorou atributos.'); showCustomAlert('Decisão Tomada', 'Você treinou duro e sentiu uma melhora!'); addXP(30); } },
+          { text: 'Descansar, a forma física é crucial agora.', effect: () => { player.progress.form = Math.min(100, player.progress.form + 10); addEventToLog('Escolheu descansar.'); showCustomAlert('Decisão Tomada', 'Você descansou bem e se sente mais leve para o próximo jogo.'); addXP(15); } }
+        ]
+      },
+      {
+        id: 'agent-offer',
+        question: 'Seu agente tem uma proposta de patrocínio duvidosa. Aceitar?',
+        description: 'Uma empresa menos conhecida oferece um contrato lucrativo, mas com reputação questionável. O que você faz?',
+        options: [
+          { text: 'Aceitar o dinheiro. Preciso construir minha carreira.', effect: () => { player.progress.moral = Math.max(0, player.progress.moral - 10); addEventToLog('Aceitou patrocínio duvidoso.'); showCustomAlert('Decisão Tomada', 'Você aceitou o patrocínio. Mas cuidado com a reputação!'); addXP(5); } },
+          { text: 'Recusar. Minha imagem vale mais.', effect: () => { player.progress.moral = Math.min(100, player.progress.moral + 5); addEventToLog('Recusou patrocínio.'); showCustomAlert('Decisão Tomada', 'Você recusou o patrocínio. Sua imagem está intacta!'); addXP(10); } }
+        ]
+      }
+    ];
+
+    let currentDecisionIndex = 0;
+
+    function showDecision(decision) {
+      const decisionPrompt = document.getElementById('decision-prompt');
+      document.getElementById('decision-question').innerText = decision.question;
+      document.getElementById('decision-description').innerText = decision.description;
+      const optionsContainer = document.getElementById('decision-options');
+      optionsContainer.innerHTML = '';
+
+      decision.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.innerText = option.text;
+        button.onclick = () => {
+          option.effect();
+          decisionPrompt.style.display = 'none';
+          saveGame();
+          updatePlayerProfile();
+          updatePlayerAttributes();
+          updateProgressBars();
+        };
+        optionsContainer.appendChild(button);
+      });
+      decisionPrompt.style.display = 'block';
+      addEventToLog(`Nova decisão: "${decision.question}"`);
+    }
+
+    function triggerNextDecision() {
+      if (currentDecisionIndex < decisions.length) {
+        showDecision(decisions[currentDecisionIndex]);
+        currentDecisionIndex++;
+      } else {
+        showCustomAlert('Fim das Decisões', 'Todas as decisões de exemplo foram tomadas. Reinicie para ver novamente.');
+        document.getElementById('decision-prompt').style.display = 'none';
+      }
+    }
+
+    // --- Event Log Functions ---
+    function addEventToLog(eventText) {
+      const timestamp = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR');
+      player.unlockedEvents.push(`[${timestamp}] ${eventText}`);
+      saveGame();
+      loadEventLog();
+    }
+
+    function loadEventLog() {
+      const eventsList = document.getElementById('events-list');
+      eventsList.innerHTML = '';
+      player.unlockedEvents.slice().reverse().forEach(event => {
+        const listItem = document.createElement('li');
+        listItem.innerText = event;
+        eventsList.appendChild(listItem);
+      });
+    }
+
+    // --- Save and Load Game ---
+    function saveGame() {
+      localStorage.setItem('fc24CareerGame', JSON.stringify(player));
+      console.log('Game saved!');
+    }
+
+    function loadGame() {
+      const savedPlayer = localStorage.getItem('fc24CareerGame');
+      if (savedPlayer) {
+        player = JSON.parse(savedPlayer);
+        // Ensure new properties are initialized if loading an old save
+        player.characterCreated = player.characterCreated || false;
+        player.height = player.height || null;
+        player.weight = player.weight || null;
+        player.dominantFoot = player.dominantFoot || "";
+        player.playStyle = player.playStyle || "";
+        player.skinColor = player.skinColor || "";
+        player.hairColor = player.hairColor || "";
+        player.hairStyle = player.hairStyle || "";
+        player.bootColor = player.bootColor || "";
+        player.jerseyNumber = player.jerseyNumber || null;
+        player.favoriteTeam = player.favoriteTeam || "";
+        player.portraitUrl = player.portraitUrl || "images/AVATAR.png"; // Initialize portrait URL
+
+        // Initialize socialCircle if it doesn't exist
+        player.socialCircle = player.socialCircle || { family: [], friends: [], relationships: [] };
+        player.socialCircle.family = player.socialCircle.family || [];
+        player.socialCircle.friends = player.socialCircle.friends || [];
+        player.socialCircle.relationships = player.socialCircle.relationships || [];
+
+        player.progress.level = player.progress.level || 1;
+        player.progress.xpToNextLevel = player.progress.xpToNextLevel || 250;
+        player.progress.skillPoints = player.progress.skillPoints || 0;
+        player.progress.objectives = player.progress.objectives || {}; // Initialize objectives
+        player.unlockedSkills = player.unlockedSkills || {};
+        player.attributes.goalkeeping = player.attributes.goalkeeping || 10;
+        player.equippedPlayStyles = player.equippedPlayStyles || {};
+        player.contacts = player.contacts || {};
+        player.emails = player.emails || [];
+        player.instagramPosts = player.instagramPosts || [];
+        player.xTweets = player.xTweets || [];
+        player.properties = player.properties || [];
+        player.vehicles = player.vehicles || [];
+        player.bikes = player.bikes || [];
+        player.currentDate = player.currentDate ? new Date(player.currentDate) : new Date(); // Load date or initialize
+        player.gameSchedule = player.gameSchedule || [ // Ensure default game schedule is loaded or re-initialized
+            { year: 2025, month: 5, day: 15, opponent: 'Rival FC', type: 'Liga' }, // June 15, 2025
+            { year: 2025, month: 5, day: 22, opponent: 'Elite United', type: 'Copa' }, // June 22, 2025
+            { year: 2025, month: 6, day: 5, opponent: 'FC Champion', type: 'Liga' }  // July 5, 2025
+        ];
+        player.userGameSchedule = player.userGameSchedule || []; // Initialize user game schedule
+
+        // Update default messages to be generic
+        if (player.contacts['agente'] && player.contacts['agente'].chatHistory[0].message.includes('Nathan')) {
+            player.contacts['agente'].chatHistory[0].message = 'Olá Jogador, tudo bem?';
+        }
+        if (player.contacts['treinador'] && player.contacts['treinador'].chatHistory[0].message.includes('Nathan')) {
+            player.contacts['treinador'].chatHistory[0].message = 'Bom treino hoje!';
+        }
+        if (player.contacts['rival'] && player.contacts['rival'].chatHistory[0].message.includes('Nathan')) {
+            player.contacts['rival'].chatHistory[0].message = 'Prepare-se para o próximo jogo, Jogador! 😉';
+        }
+        
+        if (player.emails[0] && player.emails[0].body.includes('Nathan')) {
+            player.emails[0].body = 'Olá Jogador, temos uma nova proposta de patrocínio para você. Gostaríamos de discutir os detalhes em breve.';
+        }
+        if (player.emails[1] && player.emails[1].body.includes('Nathan')) {
+            player.emails[1].body = 'Jogador, por favor, compareça à minha sala amanhã às 10h para discutirmos seu desempenho na última partida.';
+        }
+        if (player.instagramPosts[0] && player.instagramPosts[0].caption.includes('Nathan')) {
+            player.instagramPosts[0].caption = 'Seu Jogador brilha em campo!';
+        }
+        if (player.instagramPosts[1] && player.instagramPosts[1].caption.includes('Nathan')) {
+            player.instagramPosts[1].caption = 'Novo ídolo na área!';
+        }
+        if (player.xTweets[0] && player.xTweets[0].content.includes('Nathan')) {
+            player.xTweets[0].content = 'Seu Jogador tem sido uma revelação nesta temporada. Olho nele!';
+        }
+        if (player.xTweets[1] && player.xTweets[1].content.includes('Nathan')) {
+            player.xTweets[1].content = 'Que jogo do seu Jogador! Craque!';
+        }
+        
+        showCustomAlert('Jogo Carregado!', 'Seu progresso anterior foi carregado.');
+      }
+    }
+
+    // --- ATTRIBUTES SYSTEM LOGIC ---
+    const attributeCategories = {
+      'pace': 'Ritmo',
+      'shooting': 'Finalização',
+      'passing': 'Passe',
+      'dribbling': 'Drible',
+      'defending': 'Defesa',
+      'physical': 'Físico',
+      'goalkeeping': 'Goleiro'
+    };
+
+    const skillTrees = {
+      'pace': [
+        { id: 'pace-1', name: 'Aceleração Básica', icon: 'fast-forward', cost: 1, effects: { pace: 2 }, dependsOn: [], description: 'Aumenta a velocidade de aceleração do jogador.' },
+        { id: 'pace-2', name: 'Velocidade de Sprint', icon: 'gauge', cost: 1, effects: { pace: 2 }, dependsOn: ['pace-1'], description: 'Aumenta a velocidade máxima de sprint do jogador.' },
+        { id: 'pace-trait-1', name: 'Corrida Explosiva', icon: 'running', cost: 3, effects: { pace: 5, acceleration: 2 }, dependsOn: ['pace-2'], description: 'Permite arrancadas mais rápidas com a bola.' },
+        { id: 'pace-3', name: 'Agilidade Aprimorada', icon: 'line-segments', cost: 2, effects: { dribbling: 1, pace: 1 }, dependsOn: ['pace-2'], description: 'Melhora a capacidade de mudar de direção rapidamente.' },
+        { id: 'pace-trait-2', name: 'Pés Rápidos', icon: 'foot-simple', cost: 5, effects: { pace: 8, dribbling: 2 }, dependsOn: ['pace-3', 'pace-trait-1'], description: 'Confere excepcional controle de bola em alta velocidade.' }
+      ],
+      'shooting': [
+        { id: 'shooting-1', name: 'Poder de Chute', icon: 'arrow-fat-up', cost: 1, effects: { shooting: 2 }, dependsOn: [], description: 'Aumenta a potência dos chutes.' },
+        { id: 'shooting-2', name: 'Finalização', icon: 'soccer-ball', cost: 1, effects: { shooting: 2 }, dependsOn: ['shooting-1'], description: 'Melhora a precisão dos chutes ao gol.' },
+        { id: 'shooting-trait-1', name: 'Chute Colocado', icon: 'target', cost: 3, effects: { shooting: 5, passing: 1 }, dependsOn: ['shooting-2'], description: 'Aprimora a precisão e a curva em chutes colocados.' },
+        { id: 'shooting-3', name: 'Longa Distância', icon: 'arrows-out-line-horizontal', cost: 2, effects: { shooting: 3 }, dependsOn: ['shooting-2'], description: 'Melhora a precisão em chutes de fora da área.' },
+        { id: 'shooting-trait-2', name: 'Finesse Shot', icon: 'dots-three-outline', cost: 5, effects: { shooting: 8, dribbling: 2 }, dependsOn: ['shooting-3', 'shooting-trait-1'], description: 'Permite chutes colocados com efeitos e precisão excepcionais.' }
+      ],
+      'passing': [
+        { id: 'passing-1', name: 'Passe Curto', icon: 'arrow-bend-down-right', cost: 1, effects: { passing: 2 }, dependsOn: [], description: 'Melhora a precisão dos passes curtos.' },
+        { id: 'passing-2', name: 'Passe Longo', icon: 'arrow-bend-up-right', cost: 1, effects: { passing: 2 }, dependsOn: ['passing-1'], description: 'Melhora a precisão e força dos passes longos.' },
+        { id: 'passing-trait-1', name: 'Visão de Jogo', icon: 'eye', cost: 3, effects: { passing: 5 }, dependsOn: ['passing-2'], description: 'Aumenta a capacidade de encontrar companheiros de equipe em espaços apertados.' },
+        { id: 'passing-3', name: 'Cruza', icon: 'crosshair', cost: 2, effects: { passing: 3 }, dependsOn: ['passing-2'], description: 'Melhora a precisão e a curva dos cruzamentos.' },
+        { id: 'passing-trait-2', name: 'Passe Sem Olhar', icon: 'arrows-out-simple', cost: 5, effects: { passing: 8 }, dependsOn: ['passing-3', 'passing-trait-1'], description: 'Permite passes precisos sem a necessidade de olhar para o alvo.' }
+      ],
+      'dribbling': [
+        { id: 'dribbling-1', name: 'Controle de Bola', icon: 'tennis-ball', cost: 1, effects: { dribbling: 2 }, dependsOn: [], description: 'Melhora o controle da bola em diversas situações.' },
+        { id: 'dribbling-2', name: 'Condução', icon: 'football', cost: 1, effects: { dribbling: 2 }, dependsOn: ['dribbling-1'], description: 'Aumenta a habilidade de conduzir a bola com firmeza.' },
+        { id: 'dribbling-trait-1', name: 'Drible Ágil', icon: 'zigzag', cost: 3, effects: { dribbling: 5, pace: 1 }, dependsOn: ['dribbling-2'], description: 'Aprimora a agilidade e a resposta em dribles curtos.' },
+        { id: 'dribbling-3', name: 'Compostura', icon: 'brain', cost: 2, effects: { dribbling: 3, moral: 2 }, dependsOn: ['dribbling-2'], description: 'Melhora a calma e o controle da bola sob pressão.' },
+        { id: 'dribbling-trait-2', name: 'Maestro do Drible', icon: 'user-circle', cost: 5, effects: { dribbling: 8, overall: 1 }, dependsOn: ['dribbling-3', 'dribbling-trait-1'], description: 'Concede maestria em todos os tipos de drible e finta.' }
+      ],
+      'defending': [
+        { id: 'defending-1', name: 'Marcação', icon: 'user-square', cost: 1, effects: { defending: 2 }, dependsOn: [], description: 'Melhora a capacidade de marcar e seguir o oponente.' },
+        { id: 'defending-2', name: 'Desarme', icon: 'hand-grab', cost: 1, effects: { defending: 2 }, dependsOn: ['defending-1'], description: 'Aumenta a efetividade dos desarmes.' },
+        { id: 'defending-trait-1', name: 'Bloqueio', icon: 'shield', cost: 3, effects: { defending: 5, physical: 1 }, dependsOn: ['defending-2'], description: 'Melhora a capacidade de bloquear chutes e passes.' },
+        { id: 'defending-3', name: 'Interceptação', icon: 'arrows-left-right', cost: 2, effects: { defending: 3 }, dependsOn: ['defending-2'], description: 'Aprimora a leitura de jogo para interceptar passes.' },
+        { id: 'defending-trait-2', name: 'Líder da Defesa', icon: 'crown', cost: 5, effects: { defending: 8, moral: 5 }, dependsOn: ['defending-3', 'defending-trait-1'], description: 'Lidera a linha defensiva, melhorando o posicionamento da equipe.' }
+      ],
+      'physical': [
+        { id: 'physical-1', name: 'Força', icon: 'barbell', cost: 1, effects: { physical: 2 }, dependsOn: [], description: 'Aumenta a força física do jogador.' },
+        { id: 'physical-2', name: 'Resistência', icon: 'battery-charging', cost: 1, effects: { physical: 2 }, dependsOn: ['physical-1'], description: 'Aumenta a stamina e a capacidade de correr por mais tempo.' },
+        { id: 'physical-trait-1', name: 'Atleta', icon: 'person-simple-run', cost: 3, effects: { physical: 5, pace: 1 }, dependsOn: ['physical-2'], description: 'Melhora a condição física geral e a agilidade.' },
+        { id: 'physical-3', name: 'Impulsão', icon: 'arrow-fat-up', cost: 2, effects: { physical: 3 }, dependsOn: ['physical-2'], description: 'Aumenta a capacidade de salto e o jogo aéreo.' },
+        { id: 'physical-trait-2', name: 'Motor', icon: 'engine', cost: 5, effects: { physical: 8, form: 5 }, dependsOn: ['physical-3', 'physical-trait-1'], description: 'Jogador com energia inesgotável, corre por todo o campo.' }
+      ],
+      'goalkeeping': [
+        { id: 'gk-1', name: 'Reflexos', icon: 'hand-palm', cost: 1, effects: { goalkeeping: 2 }, dependsOn: [], description: 'Melhora a velocidade de reação do goleiro.' },
+        { id: 'gk-2', name: 'Manejo', icon: 'hand-holding-ball', cost: 1, effects: { goalkeeping: 2 }, dependsOn: ['gk-1'], description: 'Aprimora a segurança ao segurar a bola.' },
+        { id: 'gk-trait-1', name: 'Saída do Gol', icon: 'person-simple-walk', cost: 3, effects: { goalkeeping: 5 }, dependsOn: ['gk-2'], description: 'Melhora a efetividade do goleiro em saídas da área.' }
+      ]
+    };
+
+    let currentAttributeCategory = 'pace';
+
+    function updateAttributesHeader() {
+      document.getElementById('player-level').innerText = player.progress.level;
+      document.getElementById('xp-to-next-level').innerText = player.progress.maxXp - player.progress.xp;
+      document.getElementById('skill-points-available').innerText = player.progress.skillPoints;
+    }
+
+    function loadAttributeCategories() {
+      const categoriesContainer = document.getElementById('attributes-categories');
+      categoriesContainer.innerHTML = '';
+
+      for (const key in attributeCategories) {
+        const button = document.createElement('button');
+        button.innerText = attributeCategories[key];
+        button.onclick = () => {
+          currentAttributeCategory = key;
+          renderSkillTree(key);
+          document.querySelectorAll('.attributes-categories button').forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+        };
+        categoriesContainer.appendChild(button);
+      }
+      const initialButton = categoriesContainer.querySelector(`button:nth-child(${Object.keys(attributeCategories).indexOf(currentAttributeCategory) + 1})`);
+      if (initialButton) {
+          initialButton.classList.add('active');
+      }
+    }
+
+    function renderSkillTree(category) {
+      const skillTreeGrid = document.getElementById('skill-tree-grid');
+      skillTreeGrid.innerHTML = '';
+      const skillTreeData = skillTrees[category];
+
+      displaySkillDetails(null);
+
+      skillTreeData.forEach(skill => {
+        const skillNode = document.createElement('div');
+        skillNode.id = `skill-node-${skill.id}`;
+        skillNode.className = 'skill-node-item';
+        skillNode.innerHTML = `
+          <i class="ph ph-${skill.icon}"></i>
+          <span>${skill.name}</span>
+        `;
+        skillNode.onclick = () => selectSkill(skill.id);
+
+        if (player.unlockedSkills[skill.id]) {
+          skillNode.classList.add('unlocked');
+        } else if (!canUnlockSkill(skill.id)) {
+          skillNode.classList.add('locked');
+        }
+        skillTreeGrid.appendChild(skillNode);
+      });
+
+      drawSkillTreeLines(skillTreeData);
+    }
+
+    function getElementPosition(element) {
+        const rect = element.getBoundingClientRect();
+        const containerRect = document.getElementById('skill-tree-grid').getBoundingClientRect();
+        return {
+            x: rect.left + rect.width / 2 - containerRect.left,
+            y: rect.top + rect.height / 2 - containerRect.top
+        };
+    }
+
+    function drawSkillTreeLines(skillTreeData) {
+        const canvas = document.getElementById('skill-tree-lines-canvas');
+        const ctx = canvas.getContext('2d');
+        const gridContainer = document.getElementById('skill-tree-grid');
+
+        canvas.width = gridContainer.offsetWidth;
+        canvas.height = gridContainer.offsetHeight;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 2;
+
+        skillTreeData.forEach(skill => {
+            if (skill.dependsOn && skill.dependsOn.length > 0) {
+                const startNodeElement = document.getElementById(`skill-node-${skill.id}`);
+                if (!startNodeElement) return;
+
+                const startPos = getElementPosition(startNodeElement);
+
+                skill.dependsOn.forEach(depId => {
+                    const endNodeElement = document.getElementById(`skill-node-${depId}`);
+                    if (!endNodeElement) return;
+
+                    const endPos = getElementPosition(endNodeElement);
+
+                    ctx.beginPath();
+                    ctx.moveTo(startPos.x, startPos.y);
+                    ctx.lineTo(endPos.x, endPos.y);
+                    ctx.stroke();
+                });
+            }
+        });
+    }
+
+    function canUnlockSkill(skillId) {
+      const skill = skillTrees[currentAttributeCategory].find(s => s.id === skillId);
+      if (!skill) return false;
+      if (player.unlockedSkills[skill.id]) return false;
+
+      if (player.progress.skillPoints < skill.cost) return false;
+
+      if (skill.dependsOn) {
+        for (const depId of skill.dependsOn) {
+          if (!player.unlockedSkills[depId]) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function selectSkill(skillId) {
+      const skill = skillTrees[currentAttributeCategory].find(s => s.id === skillId);
+      if (!skill) return;
+
+      if (selectedSkillId) {
+        const prevSelectedNode = document.getElementById(`skill-node-${selectedSkillId}`);
+        if (prevSelectedNode) {
+            prevSelectedNode.classList.remove('selected');
+        }
+      }
+
+      selectedSkillId = skillId;
+      document.getElementById(`skill-node-${selectedSkillId}`).classList.add('selected');
+
+      displaySkillDetails(skill);
+    }
+
+    function displaySkillDetails(skill) {
+      const detailName = document.getElementById('skill-detail-name');
+      const detailDescription = document.getElementById('skill-detail-description');
+      const detailCost = document.getElementById('skill-detail-cost');
+      const detailEffects = document.getElementById('skill-detail-effects');
+      const unlockButton = document.getElementById('unlock-skill-button');
+
+      detailEffects.innerHTML = '';
+
+      if (!skill) {
+        detailName.innerText = 'Selecione uma habilidade para ver os detalhes.';
+        detailDescription.innerText = '';
+        detailCost.innerText = '';
+        unlockButton.style.display = 'none';
+        return;
+      }
+
+      detailName.innerText = skill.name;
+      detailDescription.innerText = skill.description;
+      detailCost.innerText = `Custo: ${skill.cost} Pontos de Habilidade`;
+      
+      for (const attr in skill.effects) {
+        const changeDiv = document.createElement('div');
+        changeDiv.className = 'attribute-change';
+        changeDiv.innerHTML = `<span>${attr.charAt(0).toUpperCase() + attr.slice(1)}:</span> <span>+${skill.effects[attr]}</span>`;
+        detailEffects.appendChild(changeDiv);
+      }
+
+      unlockButton.style.display = 'block';
+      unlockButton.innerText = `Desbloquear (${skill.cost} SP)`;
+      unlockButton.onclick = () => unlockSkill(skill.id);
+      unlockButton.disabled = !canUnlockSkill(skill.id);
+      if (player.unlockedSkills[skill.id]) {
+        unlockButton.innerText = 'Desbloqueado';
+        unlockButton.disabled = true;
+      }
+    }
+
+    function unlockSkill(skillId) {
+      const skill = skillTrees[currentAttributeCategory].find(s => s.id === skillId);
+
+      if (!skill || !canUnlockSkill(skillId)) {
+        showCustomAlert('Erro', 'Não é possível desbloquear esta habilidade.');
+        return;
+      }
+
+      player.progress.skillPoints -= skill.cost;
+      player.unlockedSkills[skill.id] = true;
+
+      for (const attr in skill.effects) {
+        player.attributes[attr] = (player.attributes[attr] || 0) + skill.effects[attr];
+      }
+
+      saveGame();
+      updateAttributesHeader();
+      renderSkillTree(currentAttributeCategory);
+      displaySkillDetails(skill);
+      addEventToLog(`Habilidade "${skill.name}" desbloqueada.`);
+      showCustomAlert('Habilidade Desbloqueada!', `Você desbloqueou "${skill.name}" e seus atributos foram aumentados!`);
+    }
+
+    // --- PLAYSTYLES SYSTEM LOGIC ---
+    const playStylesData = [
+      { id: 'finesse_shot', name: 'Finesse Shot', category: 'shooting', icon: 'dots-three-outline', description: 'Realiza chutes colocados com maior precisão e curva, ideal para finalizações de média distância.', effects: { shooting: 3 }, cost: 5 },
+      { id: 'power_shot', name: 'Power Shot', category: 'shooting', icon: 'arrow-fat-up', description: 'Aumenta a força e a velocidade dos chutes potentes, exigindo menos espaço e tempo para serem executados.', effects: { shooting: 3, physical: 1 }, cost: 5 },
+      { id: 'dead_ball', name: 'Dead Ball', category: 'shooting', icon: 'soccer-ball', description: 'Melhora a precisão, a força e a curva em cobranças de falta e pênaltis, tornando-os mais perigosos.', effects: { shooting: 2, passing: 1 }, cost: 3 },
+      { id: 'chip_shot', name: 'Chip Shot', category: 'shooting', icon: 'tennis-ball', description: 'Aprimora a precisão e a elevação dos chutes por cobertura.', effects: { shooting: 2 }, cost: 3 },
+      { id: 'tiki_taka_shooting', name: 'Tiki Taka Shooting', category: 'shooting', icon: 'arrows-clockwise', description: 'Melhora a finalização em passes curtos rápidos, ideal para jogo de toques.', effects: { shooting: 1, passing: 1 }, cost: 2 },
+
+      { id: 'incisive_pass', name: 'Incisive Pass', category: 'passing', icon: 'arrows-out-line-horizontal', description: 'Aumenta a precisão e a velocidade de passes arriscados que quebram as linhas defensivas.', effects: { passing: 3 }, cost: 5 },
+      { id: 'pinged_pass', name: 'Pinged Pass', category: 'passing', icon: 'arrow-bend-up-right', description: 'Concede maior velocidade e precisão a passes rasteiros e fortes, ideais para troca rápida de bola.', effects: { passing: 2, pace: 1 }, cost: 3 },
+      { id: 'whipped_pass', name: 'Whipped Pass', category: 'passing', icon: 'wind', description: 'Melhora a velocidade e a curva de cruzamentos e passes longos, tornando-os mais difíceis de interceptar.', effects: { passing: 2 }, cost: 3 },
+      { id: 'long_ball_pass', name: 'Long Ball Pass', category: 'passing', icon: 'arrow-arc-right', description: 'Aprimora a precisão e a altura dos passes longos, facilitando a troca de lado do campo.', effects: { passing: 2 }, cost: 3 },
+      { id: 'threaded_pass', name: 'Threaded Pass', category: 'passing', icon: 'line-segment', description: 'Permite passes mais precisos e com a trajetória correta para jogadores em movimento, através de espaços apertados.', effects: { passing: 2, dribbling: 1 }, cost: 3 },
+
+      { id: 'technical', name: 'Technical', category: 'dribbling', icon: 'circles-three-plus', description: 'Aumenta a efetividade de dribles técnicos, permitindo maior controle e resposta em alta velocidade.', effects: { dribbling: 3, pace: 1 }, cost: 5 },
+      { id: 'trickster', name: 'Trickster', category: 'dribbling', icon: 'magic-wand', description: 'Melhora a efetividade de fintas, dribles de corpo e jogadas de efeito, enganando os defensores.', effects: { dribbling: 3, moral: 2 }, cost: 5 },
+      { id: 'rapid', name: 'Rapid', category: 'dribbling', icon: 'lightning', description: 'Aumenta a capacidade de conduzir a bola rapidamente, mantendo o controle em arrancadas e contra-ataques.', effects: { dribbling: 2, pace: 2 }, cost: 4 },
+      { id: 'flair', name: 'Flair', category: 'dribbling', icon: 'star', description: 'Aumenta a chance de realizar animações de drible e chute com estilo, e passes de calcanhar.', effects: { dribbling: 1, form: 1 }, cost: 2 },
+      { id: 'first_touch', name: 'First Touch', category: 'dribbling', icon: 'hand-point-up', description: 'Melhora o controle e a precisão do primeiro toque na bola, ideal para recepções difíceis.', effects: { dribbling: 2 }, cost: 3 },
+
+      { id: 'interceptor', name: 'Interceptor', category: 'defending', icon: 'arrows-left-right', description: 'Melhora a capacidade de interceptar passes que se aproximam do jogador.', effects: { defending: 3 }, cost: 5 },
+      { id: 'jockey', name: 'Jockey', category: 'defending', icon: 'shield', description: 'Aprimora o controle do corpo e a velocidade ao fazer jockey (posicionamento defensivo), mantendo a linha defensiva.', effects: { defending: 3, physical: 1 }, cost: 5 },
+      { id: 'block', name: 'Block', category: 'defending', icon: 'square-half-bottom', description: 'Aumenta a chance de bloquear chutes e passes, e melhora a efetividade dos carrinhos de bloqueio.', effects: { defending: 2 }, cost: 3 },
+      { id: 'slide_tackle', name: 'Slide Tackle', category: 'defending', icon: 'person-dolly', description: 'Melhora a precisão e a força dos carrinhos, permitindo desarmes mais efetivos.', effects: { defending: 2 }, cost: 3 },
+      { id: 'anticipate', name: 'Anticipate', category: 'defending', icon: 'magnifying-glass', description: 'Aumenta a capacidade de antecipar movimentos do adversário e interceptar passes.', effects: { defending: 2, passing: 1 }, cost: 3 },
+
+      { id: 'acrobatic', name: 'Acrobatic', category: 'physical', icon: 'person-simple-a', description: 'Permite chutes e passes acrobáticos em situações difíceis, como bolas altas e divididas.', effects: { physical: 2, shooting: 1 }, cost: 3 },
+      { id: 'relentless', name: 'Relentless', category: 'physical', icon: 'battery-charging', description: 'Reduz significativamente a perda de fôlego e aumenta a recuperação de stamina durante a partida.', effects: { physical: 3, form: 2 }, cost: 5 },
+      { id: 'strength', name: 'Strength', category: 'physical', icon: 'barbell', description: 'Aumenta a força física do jogador, tornando-o mais difícil de ser desarmado e empurrado.', effects: { physical: 3 }, cost: 4 },
+      { id: 'aerial', name: 'Aerial', category: 'physical', icon: 'cloud-arrow-up', description: 'Melhora a impulsão e a capacidade de vencer disputas aéreas, tanto na defesa quanto no ataque.', effects: { physical: 2 }, cost: 3 }
+    ];
+
+    const playStyleCategories = {
+      'all': 'Todos',
+      'shooting': 'Finalização',
+      'passing': 'Passe',
+      'dribbling': 'Drible',
+      'defending': 'Defesa',
+      'physical': 'Físico'
+    };
+
+    let currentPlayStyleCategory = 'all';
+
+    function updatePlayStyleHeader() {
+        document.getElementById('playstyle-skill-points-available').innerText = player.progress.skillPoints;
+    }
+
+    function loadPlayStyleCategories() {
+        const categoriesContainer = document.getElementById('playstyles-categories');
+        categoriesContainer.innerHTML = '';
+
+        for (const key in playStyleCategories) {
+            const button = document.createElement('button');
+            button.innerText = playStyleCategories[key];
+            button.onclick = () => {
+                currentPlayStyleCategory = key;
+                renderPlayStyles(key);
+                document.querySelectorAll('.playstyles-categories button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            };
+            categoriesContainer.appendChild(button);
+        }
+        const initialButton = categoriesContainer.querySelector(`button:nth-child(${Object.keys(playStyleCategories).indexOf(currentPlayStyleCategory) + 1})`);
+        if (initialButton) {
+            initialButton.classList.add('active');
+        }
+    }
+
+    function renderPlayStyles(category) {
+        const playstylesGrid = document.getElementById('playstyles-grid');
+        playstylesGrid.innerHTML = '';
+        const filteredPlayStyles = category === 'all' ? playStylesData : playStylesData.filter(ps => ps.category === category);
+
+        displayPlayStyleDetails(null);
+
+        filteredPlayStyles.forEach(playStyle => {
+            const card = document.createElement('div');
+            card.id = `playstyle-card-${playStyle.id}`;
+            card.className = 'playstyle-card';
+            if (player.equippedPlayStyles[playStyle.id]) {
+                card.classList.add('equipped');
+            } else if (!canEquipPlayStyle(playStyle.id)) {
+                card.classList.add('locked');
+            }
+            card.innerHTML = `
+                <i class="ph ph-${playStyle.icon}"></i>
+                <span>${playStyle.name}</span>
+            `;
+            card.onclick = () => selectPlayStyle(playStyle.id);
+            playstylesGrid.appendChild(card);
+        });
+    }
+
+    function canEquipPlayStyle(playStyleId) {
+        const playStyle = playStylesData.find(ps => ps.id === playStyleId);
+        if (!playStyle) return false;
+        if (player.equippedPlayStyles[playStyle.id]) return false;
+        if (player.progress.skillPoints < playStyle.cost) return false;
+        return true;
+    }
+
+    function selectPlayStyle(playStyleId) {
+        const playStyle = playStylesData.find(ps => ps.id === playStyleId);
+        if (!playStyle) return;
+
+        if (selectedPlayStyleId) {
+            const prevSelectedCard = document.getElementById(`playstyle-card-${selectedPlayStyleId}`);
+            if (prevSelectedCard) {
+                prevSelectedCard.classList.remove('selected');
+            }
+        }
+
+        selectedPlayStyleId = playStyleId;
+        document.getElementById(`playstyle-card-${selectedPlayStyleId}`).classList.add('selected');
+
+        displayPlayStyleDetails(playStyle);
+    }
+
+    function displayPlayStyleDetails(playStyle) {
+        const detailName = document.getElementById('playstyle-detail-name');
+        const detailDescription = document.getElementById('playstyle-detail-description');
+        const detailCost = document.getElementById('playstyle-detail-cost');
+        const detailEffects = document.getElementById('playstyle-detail-effects');
+        const equipButton = document.getElementById('equip-playstyle-button');
+
+        detailEffects.innerHTML = '';
+
+        if (!playStyle) {
+            detailName.innerText = 'Selecione um PlayStyle para ver os detalhes.';
+            detailDescription.innerText = '';
+            detailCost.innerText = '';
+            equipButton.style.display = 'none';
+            return;
+        }
+
+        detailName.innerText = playStyle.name;
+        detailDescription.innerText = playStyle.description;
+        detailCost.innerText = `Custo: ${playStyle.cost} Pontos de Habilidade`;
+
+        for (const attr in playStyle.effects) {
+            const changeDiv = document.createElement('div');
+            changeDiv.className = 'attribute-change';
+            changeDiv.innerHTML = `<span>${attr.charAt(0).toUpperCase() + attr.slice(1)}:</span> <span>+${playStyle.effects[attr]}</span>`;
+            detailEffects.appendChild(changeDiv);
+        }
+
+        equipButton.style.display = 'block';
+        if (player.equippedPlayStyles[playStyle.id]) {
+            equipButton.innerText = 'Equipado';
+            equipButton.disabled = true;
+        } else {
+            equipButton.innerText = `Equipar (${playStyle.cost} SP)`;
+            equipButton.onclick = () => equipPlayStyle(playStyle.id);
+            equipButton.disabled = !canEquipPlayStyle(playStyle.id);
+        }
+    }
+
+    function equipPlayStyle(playStyleId) {
+        const playStyle = playStylesData.find(ps => ps.id === playStyleId);
+
+        if (!playStyle || !canEquipPlayStyle(playStyleId)) {
+            showCustomAlert('Erro', 'Não é possível equipar este PlayStyle.');
+            return;
+        }
+
+        player.progress.skillPoints -= playStyle.cost;
+        player.equippedPlayStyles[playStyle.id] = true;
+
+        for (const attr in playStyle.effects) {
+            player.attributes[attr] = (player.attributes[attr] || 0) + playStyle.effects[attr];
+        }
+
+        saveGame();
+        updatePlayStyleHeader();
+        updateAttributesHeader();
+        renderPlayStyles(currentPlayStyleCategory);
+        displayPlayStyleDetails(playStyle);
+        addEventToLog(`PlayStyle "${playStyle.name}" equipado.`);
+        showCustomAlert('PlayStyle Equipado!', `Você equipou "${playStyle.name}" e seus atributos foram aprimorados!`);
+    }
+
+    // --- CELULAR APP LOGIC ---
+    function switchCellularApp(appId) {
+        document.querySelectorAll('.cellular-app-panel').forEach(panel => {
+            panel.classList.remove('active');
+            panel.style.display = 'none';
+        });
+        document.querySelectorAll('.cellular-app-nav button').forEach(button => {
+            button.classList.remove('active');
+        });
+
+        const activeAppPanel = document.getElementById(`${appId}-app`);
+        if (activeAppPanel) {
+            activeAppPanel.style.display = 'block';
+            setTimeout(() => {
+                activeAppPanel.classList.add('active');
+            }, 10);
+            currentCellularApp = appId;
+
+            document.querySelector(`.cellular-app-nav button[onclick="switchCellularApp('${appId}')"]`).classList.add('active');
+
+            if (appId === 'conversas') {
+                renderContacts();
+                document.getElementById('active-chat-window').style.display = 'none';
+            } else if (appId === 'email') {
+                renderEmails();
+                document.getElementById('email-viewer').style.display = 'none';
+            } else if (appId === 'google') {
+                document.getElementById('google-search-results').innerHTML = '<p>Resultados da pesquisa aparecerão aqui.</p>';
+                document.getElementById('google-search-input').value = '';
+            } else if (appId === 'instagram') {
+                renderInstagramFeed();
+            } else if (appId === 'x') {
+                renderXFeed();
+            } else if (appId === 'dynasty8') {
+                renderProperties();
+            } else if (appId === 'legendarymotorsport') {
+                renderVehicles();
+            } else if (appId === 'pandmcycles') {
+                renderBikes();
+            }
+        }
+    }
+
+    // Conversas App Functions
+    function renderContacts() {
+        const contactListDiv = document.getElementById('conversas-contact-list');
+        contactListDiv.innerHTML = '';
+        for (const contactId in player.contacts) {
+            const contact = player.contacts[contactId];
+            const contactItem = document.createElement('div');
+            contactItem.className = 'contact-item';
+            contactItem.innerText = contact.name;
+            contactItem.onclick = () => openChat(contactId);
+            contactListDiv.appendChild(contactItem);
+        }
+    }
+
+    function openChat(contactId) {
+        currentChatContact = contactId;
+        const chatWindow = document.getElementById('active-chat-window');
+        document.getElementById('chat-contact-name').innerText = player.contacts[contactId].name;
+        chatWindow.style.display = 'block';
+        renderChatMessages();
+    }
+
+    function renderChatMessages() {
+        const chatMessagesDiv = document.getElementById('chat-messages');
+        chatMessagesDiv.innerHTML = '';
+        if (currentChatContact && player.contacts[currentChatContact]) {
+            player.contacts[currentChatContact].chatHistory.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.sender === 'user' ? 'sent' : 'received'}`;
+                messageDiv.innerText = msg.message;
+                chatMessagesDiv.appendChild(messageDiv);
+            });
+            chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+        }
+    }
+
+    async function sendChatMessage() {
+        const input = document.getElementById('chat-message-input');
+        const message = input.value.trim();
+        if (message && currentChatContact) {
+            player.contacts[currentChatContact].chatHistory.push({ sender: 'user', message: message });
+            input.value = '';
+            renderChatMessages();
+            saveGame();
+
+            showCustomAlert('Mensagem Enviada', 'Sua mensagem foi enviada. Aguardando resposta do personagem...');
+            const aiResponse = await generateAIResponse(message, currentChatContact);
+            player.contacts[currentChatContact].chatHistory.push({ sender: 'other', message: aiResponse });
+            renderChatMessages();
+            saveGame();
+        }
+    }
+
+    async function generateAIResponse(userMessage, contactId) {
+        let responseMessage = 'Hmm, interessante.';
+        if (contactId === 'agente') {
+            responseMessage = 'Certo, vou verificar isso para você. O que mais posso fazer?';
+        } else if (contactId === 'treinador') {
+            responseMessage = 'Bom trabalho, Jogador! Continue focado.';
+        } else if (contactId === 'rival') {
+            responseMessage = 'Você não vai conseguir me parar no próximo jogo, Jogador! 😉';
+        }
+        
+        return new Promise(resolve => setTimeout(() => resolve(responseMessage), 1000));
+    }
+
+    // E-mail App Functions
+    function renderEmails() {
+        const emailInboxDiv = document.getElementById('email-inbox');
+        emailInboxDiv.innerHTML = '';
+        player.emails.forEach((email, index) => {
+            const emailItem = document.createElement('div');
+            emailItem.className = 'email-item';
+            if (email.read) {
+                emailItem.style.opacity = 0.7;
+            }
+            emailItem.innerHTML = `<strong>De: ${email.sender}</strong><br>Assunto: ${email.subject}`;
+            emailItem.onclick = () => openEmail(index);
+            emailInboxDiv.appendChild(emailItem);
+        });
+    }
+
+    function openEmail(index) {
+        const email = player.emails[index];
+        document.getElementById('email-sender').innerText = email.sender;
+        document.getElementById('email-subject').innerText = email.subject;
+        document.getElementById('email-body').innerText = email.body;
+        document.getElementById('email-viewer').style.display = 'block';
+        email.read = true;
+        saveGame();
+        renderEmails();
+    }
+
+    function closeEmailViewer() {
+        document.getElementById('email-viewer').style.display = 'none';
+    }
+
+    // Google App Functions
+    async function performGoogleSearch() {
+        const query = document.getElementById('google-search-input').value.trim();
+        const searchResultsDiv = document.getElementById('google-search-results');
+        searchResultsDiv.innerHTML = `<p>Pesquisando por "${query}"...</p>`;
+
+        if (!query) {
+            searchResultsDiv.innerHTML = '<p>Por favor, digite algo para pesquisar.</p>';
+            return;
+        }
+
+        setTimeout(() => {
+            searchResultsDiv.innerHTML = `
+                <h4>Resultados para "${query}"</h4>
+                <p><strong>Exemplo de Link 1:</strong> <a href="#" style="color:#32FF55;">${query.replace(/ /g, '_')}.com</a><br>
+                <small>Descrição de um resultado relevante para a sua pesquisa.</small></p>
+                <p><strong>Exemplo de Link 2:</strong> <a href="#" style="color:#32FF55;">informacoes_${query.replace(/ /g, '_')}.net</a><br>
+                <small>Outro resultado que pode ser útil.</small></p>
+                <p><em>(Esta é uma simulação. Resultados reais viriam de uma API.)</em></p>
+            `;
+        }, 1500);
+    }
+
+    // Instagram App Functions
+    function renderInstagramFeed() {
+        const instagramFeedDiv = document.getElementById('instagram-feed');
+        instagramFeedDiv.innerHTML = '';
+        player.instagramPosts.forEach(post => {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'instagram-post';
+            postDiv.innerHTML = `
+                <img src="${post.imageUrl}" alt="[Image of ${post.user}]" onerror="this.onerror=null;this.src='https://placehold.co/150x150/0E0E0E/32FF55?text=IMAGEM+POST';">
+                <p><strong>@${post.user}</strong> ${post.caption}</p>
+            `;
+            instagramFeedDiv.appendChild(postDiv);
+        });
+    }
+
+    // X (Twitter) App Functions
+    function renderXFeed() {
+        const xFeedDiv = document.getElementById('x-feed');
+        xFeedDiv.innerHTML = '';
+        player.xTweets.forEach(tweet => {
+            const tweetDiv = document.createElement('div');
+            tweetDiv.className = 'tweet';
+            tweetDiv.innerHTML = `
+                <div class="author">${tweet.author}</div>
+                <div class="content">${tweet.content}</div>
+            `;
+            xFeedDiv.appendChild(tweetDiv);
+        });
+    }
+
+    // Dynasty 8 Real Estates App Functions
+    function renderProperties() {
+        const propertiesDiv = document.getElementById('dynasty8-properties');
+        propertiesDiv.innerHTML = '';
+        player.properties.forEach(prop => {
+            const propCard = document.createElement('div');
+            propCard.className = 'property-card';
+            propCard.innerHTML = `
+                <img src="${prop.imageUrl}" alt="[Image of ${prop.name}]" onerror="this.onerror=null;this.src='https://placehold.co/250x150/0E0E0E/32FF55?text=IMOVEL';">
+                <h4>${prop.name}</h4>
+                <p>${prop.description}</p>
+                <p>Preço: <strong>${prop.price}</strong></p>
+                <p>Localização: ${prop.location}</p>
+                <button class="purchase-button" onclick="purchaseItem('${prop.id}', 'property', '${prop.name}', '${prop.price}')">Comprar</button>
+            `;
+            propertiesDiv.appendChild(propCard);
+        });
+    }
+
+    // Legendary Motorsport App Functions
+    function renderVehicles() {
+        const vehiclesDiv = document.getElementById('legendarymotorsport-vehicles');
+        vehiclesDiv.innerHTML = '';
+        player.vehicles.forEach(vehicle => {
+            const vehicleCard = document.createElement('div');
+            vehicleCard.className = 'vehicle-card';
+            vehicleCard.innerHTML = `
+                <img src="${vehicle.imageUrl}" alt="[Image of ${vehicle.name}]" onerror="this.onerror=null;this.src='https://placehold.co/250x150/0E0E0E/32FF55?text=VEICULO';">
+                <h4>${vehicle.name} (${vehicle.year})</h4>
+                <p>${vehicle.description}</p>
+                <p>Preço: <strong>${vehicle.price}</strong></p>
+                <p>Quilometragem: ${vehicle.mileage}</p>
+                <p>Localização: ${vehicle.location}</p>
+                <button class="purchase-button" onclick="purchaseItem('${vehicle.id}', 'vehicle', '${vehicle.name}', '${vehicle.price}')">Comprar</button>
+            `;
+            vehiclesDiv.appendChild(vehicleCard);
+        });
+    }
+
+    // Pedal & Metal Cycles App Functions
+    function renderBikes() {
+        const bikesDiv = document.getElementById('pandmcycles-bikes');
+        bikesDiv.innerHTML = '';
+        player.bikes.forEach(bike => {
+            const bikeCard = document.createElement('div');
+            bikeCard.className = 'bike-card';
+            bikeCard.innerHTML = `
+                <img src="${bike.imageUrl}" alt="${bike.name}" onerror="this.onerror=null;this.src='https://placehold.co/250x150/0E0E0E/32FF55?text=BIKE';">
+                <h4>${bike.name}</h4>
+                <p>${bike.description}</p>
+                <p>Preço: <strong>${bike.price}</strong></p>
+                <button class="purchase-button" onclick="purchaseItem('${bike.id}', 'bike', '${bike.name}', '${bike.price}')">Comprar</button>
+            `;
+            bikesDiv.appendChild(bikeCard);
+        });
+    }
+
+    // Generic purchase function (placeholder for actual economy system)
+    function purchaseItem(itemId, itemType, itemName, itemPrice) {
+      showCustomAlert('Compra Simulada', `Você tentou comprar ${itemName} por ${itemPrice}. (Funcionalidade de compra real a ser implementada!)`);
+      addEventToLog(`Tentou comprar ${itemName}.`);
+    }
+
+    // --- CALENDAR SYSTEM LOGIC ---
+    const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    const dayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+    function renderCalendar() {
+        const currentDate = player.currentDate;
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+
+        document.getElementById('current-month-year').innerText = `${monthNames[month]} ${year}`;
+
+        const calendarGrid = document.getElementById('calendar-grid');
+        calendarGrid.innerHTML = '';
+
+        // Add day names
+        dayNames.forEach(day => {
+            const dayNameDiv = document.createElement('div');
+            dayNameDiv.className = 'day-name';
+            dayNameDiv.innerText = day;
+            calendarGrid.appendChild(dayNameDiv);
+        });
+
+        // Get the first day of the month and number of days in the month
+        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // Add empty divs for leading blank days
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            calendarGrid.appendChild(document.createElement('div'));
+        }
+
+        // Add days of the month
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayDiv = document.createElement('div');
+            dayDiv.innerText = day;
+            
+            const today = new Date();
+            if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                dayDiv.classList.add('current-day');
+            }
+
+            // Check for game days from default schedule
+            const gameDayMatchDefault = player.gameSchedule.find(game => 
+                game.year === year && game.month === month && game.day === day
+            );
+            // Check for game days from user-defined schedule
+            const gameDayMatchUser = player.userGameSchedule.find(game => 
+                game.year === year && game.month === month && game.day === day
+            );
+
+            if (gameDayMatchDefault || gameDayMatchUser) {
+                dayDiv.classList.add('game-day');
+                const tooltipText = (gameDayMatchDefault ? `Jogo: ${gameDayMatchDefault.opponent} (${gameDayMatchDefault.type})` : '') +
+                                   (gameDayMatchUser ? (gameDayMatchDefault ? '\n' : '') + `Evento: ${gameDayMatchUser.opponent} (${gameDayMatchUser.type})` : '');
+                dayDiv.title = tooltipText.trim();
+            }
+            calendarGrid.appendChild(dayDiv);
+        }
+        renderUpcomingEvents();
+    }
+
+    // Sample game schedule for the player (can be expanded later)
+    player.gameSchedule = [
+        { year: 2025, month: 5, day: 15, opponent: 'SK Rapid Vienna', type: 'Liga' }, // June 15, 2025
+        { year: 2025, month: 5, day: 22, opponent: 'FC Red Bull Salzburg', type: 'Copa' }, // June 22, 2025
+        { year: 2025, month: 6, day: 5, opponent: 'LASK', type: 'Liga' }  // July 5, 2025
+    ];
+
+    function addCalendarEvent() {
+        const dateInput = document.getElementById('event-date-input').value;
+        const opponentInput = document.getElementById('event-opponent-input').value.trim();
+        const typeSelect = document.getElementById('event-type-select').value;
+
+        if (!dateInput || !opponentInput || !typeSelect) {
+            showCustomAlert('Erro', 'Por favor, preencha todos os campos do evento.');
+            return;
+        }
+
+        const eventDate = new Date(dateInput + 'T00:00:00'); // Add T00:00:00 to avoid timezone issues
+        
+        player.userGameSchedule.push({
+            year: eventDate.getFullYear(),
+            month: eventDate.getMonth(),
+            day: eventDate.getDate(),
+            opponent: opponentInput,
+            type: typeSelect
+        });
+
+        saveGame();
+        renderCalendar();
+        showCustomAlert('Evento Adicionado', `Evento "${opponentInput}" adicionado ao calendário.`);
+        addEventToLog(`Evento "${opponentInput}" adicionado ao calendário para ${eventDate.toLocaleDateString('pt-BR')}.`);
+
+        // Clear form
+        document.getElementById('event-date-input').value = '';
+        document.getElementById('event-opponent-input').value = '';
+        document.getElementById('event-type-select').value = 'Jogo';
+    }
+
+
+    function advanceDay(days) {
+        player.currentDate.setDate(player.currentDate.getDate() + days);
+        saveGame();
+        renderCalendar();
+        addEventToLog(`Avançou ${days} dia(s). Data atual: ${player.currentDate.toLocaleDateString('pt-BR')}`);
+        // Trigger events based on day advancement, e.g., scout emails, game days
+        checkGameDays();
+    }
+
+    function checkGameDays() {
+        const today = player.currentDate;
+        const allEvents = [...player.gameSchedule, ...player.userGameSchedule]; // Combine default and user events
+
+        allEvents.forEach(game => {
+            const gameDate = new Date(game.year, game.month, game.day);
+            if (today.getFullYear() === gameDate.getFullYear() &&
+                today.getMonth() === gameDate.getMonth() &&
+                today.getDate() === gameDate.getDate()) {
+                
+                showCustomAlert('Dia de Evento!', `Hoje é dia de ${game.type} contra/com ${game.opponent}!`);
+                addEventToLog(`${game.type}: ${game.opponent}.`);
+                
+                // Simulate game outcome if it's a 'Jogo'
+                if (game.type === 'Jogo') {
+                    player.stats.matches++;
+                    player.stats.goals += Math.floor(Math.random() * 2); // 0 or 1 goal
+                    player.stats.assists += Math.floor(Math.random() * 2); // 0 or 1 assist
+                    addXP(50 + Math.floor(Math.random() * 50)); // Random XP
+                    player.progress.form = Math.max(50, player.progress.form - 5 + Math.floor(Math.random() * 10)); // Form fluctuates
+                    player.progress.moral = Math.max(50, player.progress.moral - 5 + Math.floor(Math.random() * 10)); // Moral fluctuates
+                }
+                saveGame();
+                updatePlayerProfile();
+                updateProgressBars();
+            }
+        });
+    }
+
+    function renderUpcomingEvents() {
+        const upcomingEventsList = document.getElementById('upcoming-events-list');
+        upcomingEventsList.innerHTML = '';
+        
+        const now = player.currentDate;
+        const allEvents = [...player.gameSchedule, ...player.userGameSchedule]; // Combine all events
+        
+        const upcoming = allEvents
+            .filter(event => {
+                const eventDate = new Date(event.year, event.month, event.day);
+                // Filter events that are today or in the future
+                return eventDate.toDateString() === now.toDateString() || eventDate > now;
+            })
+            .sort((a, b) => {
+                const dateA = new Date(a.year, a.month, a.day);
+                const dateB = new Date(b.year, b.month, b.day);
+                return dateA - dateB;
+            })
+            .slice(0, 5); // Show next 5 upcoming events
+
+        if (upcoming.length === 0) {
+            const listItem = document.createElement('li');
+            listItem.innerText = 'Nenhum evento futuro agendado.';
+            upcomingEventsList.appendChild(listItem);
+        } else {
+            upcoming.forEach(event => {
+                const listItem = document.createElement('li');
+                const eventDate = new Date(event.year, event.month, event.day);
+                const eventType = event.type === 'Jogo' ? 'Jogo contra' : event.type; // Adjust text for 'Jogo'
+                listItem.innerText = `${eventDate.toLocaleDateString('pt-BR')} - ${eventType} ${event.opponent}`;
+                upcomingEventsList.appendChild(listItem);
+            });
+        }
+    }
+
+
+    // --- PRESS CONFERENCE LOGIC ---
+    let pressConferenceQuestions = [];
+    let currentPressQuestionIndex = 0;
+    const journalists = [
+        { name: "Carlos Silva", outlet: "Globo Esporte" },
+        { name: "Ana Paula", outlet: "ESPN Brasil" },
+        { name: "João Vítor", outlet: "Lance!" },
+        { name: "Fernanda Lima", outlet: "BBC Sport" },
+        { name: "Ricardo Alves", outlet: "Marca" }
+    ];
+
+    async function startPressConference() {
+        document.getElementById('pressConferenceCinematic').classList.add('active');
+        document.getElementById('player-press-response').value = '';
+        document.getElementById('press-conference-feedback').style.display = 'none';
+        document.getElementById('submit-press-response').style.display = 'block';
+        document.getElementById('next-question-button').style.display = 'none';
+        document.getElementById('end-conference-button').style.display = 'none';
+        
+        currentPressQuestionIndex = 0;
+        pressConferenceQuestions = []; // Reset questions for new conference
+
+        showCustomAlert('Preparando Conferência', 'Gerando perguntas para a imprensa...');
+
+        // Generate 5 questions
+        for (let i = 0; i < 5; i++) {
+            const journalist = journalists[Math.floor(Math.random() * journalists.length)];
+            const question = await generatePressQuestion(journalist, i + 1);
+            pressConferenceQuestions.push({ journalist, question });
+        }
+        closeCustomAlert();
+        askNextQuestion();
+    }
+
+    function askNextQuestion() {
+        if (currentPressQuestionIndex < pressConferenceQuestions.length) {
+            const qa = pressConferenceQuestions[currentPressQuestionIndex];
+            document.getElementById('journalist-question').innerText = qa.question;
+            document.getElementById('journalist-info').innerText = `${qa.journalist.name} - ${qa.journalist.outlet}`;
+            document.getElementById('player-press-response').value = '';
+            document.getElementById('player-press-response').disabled = false;
+            document.getElementById('submit-press-response').style.display = 'block';
+            document.getElementById('next-question-button').style.display = 'none';
+            document.getElementById('press-conference-feedback').style.display = 'none';
+            document.getElementById('end-conference-button').style.display = 'none';
+        } else {
+            document.getElementById('journalist-question').innerText = "A conferência de imprensa terminou.";
+            document.getElementById('journalist-info').innerText = "";
+            document.getElementById('player-press-response').style.display = 'none';
+            document.getElementById('submit-press-response').style.display = 'none';
+            document.getElementById('next-question-button').style.display = 'none';
+            document.getElementById('end-conference-button').style.display = 'block';
+            document.getElementById('press-conference-feedback').style.display = 'none';
+            addEventToLog('Conferência de imprensa encerrada.');
+        }
+    }
+
+    async function submitPressResponse() {
+        const playerResponse = document.getElementById('player-press-response').value.trim();
+        if (!playerResponse) {
+            showCustomAlert('Resposta Necessária', 'Por favor, digite sua resposta.');
+            return;
+        }
+        document.getElementById('player-press-response').disabled = true;
+        document.getElementById('submit-press-response').style.display = 'none';
+        
+        const feedback = await getPressFeedback(playerResponse, pressConferenceQuestions[currentPressQuestionIndex].question);
+        document.getElementById('press-conference-feedback').innerText = feedback.message;
+        document.getElementById('press-conference-feedback').style.display = 'block';
+
+        // Apply effects based on sentiment
+        player.progress.moral = Math.max(0, Math.min(100, player.progress.moral + feedback.moralChange));
+        player.progress.form = Math.max(0, Math.min(100, player.progress.form + feedback.formChange));
+        addXP(feedback.xpGain);
+        addEventToLog(`Respondeu à imprensa: "${playerResponse.substring(0, 30)}..." (Moral: ${feedback.moralChange > 0 ? '+' : ''}${feedback.moralChange}, XP: ${feedback.xpGain})`);
+        saveGame();
+        updateProgressBars();
+        updatePlayerProfile();
+
+        currentPressQuestionIndex++;
+        if (currentPressQuestionIndex < pressConferenceQuestions.length) {
+            document.getElementById('next-question-button').style.display = 'block';
+        } else {
+            document.getElementById('end-conference-button').style.display = 'block';
+        }
+    }
+
+    function nextPressQuestion() {
+        askNextQuestion();
+    }
+
+    function endPressConference() {
+        document.getElementById('pressConferenceCinematic').classList.remove('active');
+        document.getElementById('player-press-response').style.display = 'block'; // Reset display
+    }
+
+    // Placeholder for AI question generation - Will use Gemini API
+    async function generatePressQuestion(journalist, questionNumber) {
+        // Construct a prompt for Gemini
+        const prompt = `Como um jornalista esportivo do ${journalist.outlet}, faça uma pergunta perspicaz ao jogador profissional ${player.name}, que joga como ${player.position}. Considere que ele joga atualmente pelo ${player.club} e sua nacionalidade é ${player.nationality}. A pergunta deve ser a ${questionNumber}ª da coletiva de imprensa. Foco em performance, expectativas ou futuro, sem mencionar o "Overall" do jogador.`;
+
+        // Dummy response for now
+        return new Promise(resolve => setTimeout(() => {
+            const questions = [
+                `Jogador ${player.name}, qual a sua análise sobre o desempenho recente da equipe ${player.club} e qual o seu papel nesse esquema tático?`,
+                `Com sua performance atual, você se sente pronto para um desafio maior em um clube de elite? Há rumores de interesse de grandes clubes...`,
+                `Considerando a pressão de jogar como ${player.position} no ${player.club}, como você lida com as críticas e o que te motiva a continuar evoluindo?`,
+                `Qual a sua expectativa para a próxima temporada, tanto individualmente quanto para o ${player.club}?`,
+                `Você tem uma mensagem para os torcedores do ${player.club} que esperam tanto de você?`
+            ];
+            resolve(questions[questionNumber - 1] || "Que pergunta você tem, jornalista?");
+        }, 1500));
+    }
+
+    // Placeholder for AI feedback on player response - Will use Gemini API
+    async function getPressFeedback(playerResponse, question) {
+        // Construct a prompt for Gemini to evaluate player's response
+        const prompt = `O jogador ${player.name} foi perguntado: "${question}" e respondeu: "${playerResponse}". Como um analista de mídia esportiva, avalie a resposta em termos de moral/confiança do jogador e impacto na imagem pública. Forneça um breve feedback e sugira o impacto em (moral: +-X, forma: +-Y, xp: Z).`;
+
+        // Dummy feedback for now
+        return new Promise(resolve => setTimeout(() => {
+            let moralChange = 0;
+            let formChange = 0;
+            let xpGain = 10;
+            let message = "Sua resposta foi neutra.";
+
+            if (playerResponse.toLowerCase().includes('vitória') || playerResponse.toLowerCase().includes('confiante') || playerResponse.toLowerCase().includes('trabalho duro')) {
+                moralChange = 5;
+                xpGain = 20;
+                message = "Sua resposta positiva e focada no coletivo ressoou bem com a imprensa e torcedores. Excelente!";
+            } else if (playerResponse.toLowerCase().includes('melhorar') || playerResponse.toLowerCase().includes('treinar')) {
+                formChange = 3;
+                xpGain = 15;
+                message = "Uma resposta que demonstra autocrítica e busca por aprimoramento. A imprensa valoriza a honestidade.";
+            } else if (playerResponse.toLowerCase().includes('difícil') || playerResponse.toLowerCase().includes('pressão') || playerResponse.toLowerCase().includes('cansado')) {
+                moralChange = -5;
+                xpGain = 5;
+                message = "Sua honestidade foi notada, mas alguns veículos podem interpretar como fraqueza. Cuidado com a imagem.";
+            } else if (playerResponse.toLowerCase().includes('não sei') || playerResponse.toLowerCase().includes('sem comentários')) {
+                moralChange = -10;
+                xpGain = 0;
+                message = "Uma resposta evasiva pode gerar especulações negativas. Tente ser mais engajado na próxima.";
+            }
+
+            resolve({ message, moralChange, formChange, xpGain });
+        }, 1500));
+    }
+
+
+    // Initial setup when the window loads
+    window.onload = () => {
+      loadGame();
+
+      if (!player.characterCreated) {
+        switchTab('criacao');
+        setNavigationButtonsState(false);
+        document.getElementById('criacao-tab-button').disabled = false;
+      } else {
+        switchTab('jogador');
+        setNavigationButtonsState(true);
+        // Ensure the correct sub-tab is activated if returning to Jogador
+        switchPlayerSubTab(currentPlayerSubTab); 
+        loadClubOffers(); // Load initial offers or regenerate
+        loadObjectives();
+        updateProgressBars();
+        updateAttributesHeader();
+        loadAttributeCategories();
+        renderSkillTree(currentAttributeCategory);
+        updatePlayStyleHeader();
+        loadPlayStyleCategories();
+        renderPlayStyles(currentPlayStyleCategory);
+        renderCalendar(); // Render calendar on load
+      }
+
+      window.addEventListener('resize', () => {
+          if (document.getElementById('atributos').classList.contains('active')) {
+              drawSkillTreeLines(skillTrees[currentAttributeCategory]);
+          }
+      });
+
+      // For demonstration, trigger a decision after a short delay if character is created
+      if (player.characterCreated) {
+        setTimeout(() => {
+          triggerNextDecision();
+        }, 2000);
+      }
+    };
+  </script>
+</body>
+</html>
